@@ -1,0 +1,2 @@
+msg="hellow"
+print(msg)
