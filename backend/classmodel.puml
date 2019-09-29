@@ -1,0 +1,30 @@
+@startuml
+title Soccerheatmap - Class Diagram
+class Player {
+  -int id
+  -int playerNumber
+  -Position position
+  -String name 
+  +Position getPosition()
+  +void setPosition(Position)
+}
+class Position {
+-int x
+-int y
+}
+class Team {
+-List Player
+}
+class Match {
+-Team home
+-Lineup homeLineup
+-Team away
+-Lineup awayLineup
+}
+class Lineup {
+-Map lineup
++Position getPosition(int)
++int getPlayer(Position)
++Map getLineup()
+}
+@enduml
