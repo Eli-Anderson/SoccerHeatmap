@@ -1,9 +1,13 @@
 import cx_Oracle
+from pprint import pprint
 
-con = cx_Oracle.connect('SOCCER02/howdy@sportanalysisdb.inform.hs-hannover.de:1521/orcl')
+
+con = cx_Oracle.connect("424-ML6-U1", "DBS2_2018", "myservice")
 cursor = con.cursor()
 
-cursor.execute('select * from soccer02.country') # use triple quotes if you want to spread your query across multiple lines
+cursor.execute('select user from dual') # use triple quotes if you want to spread your query across multiple lines
+
+pprint(cursor.fetchall())
 
 #for row in cursor:
 #    print (row[0], '-', row[1]) # this only shows the first two columns. To add an additional column you'll need to add , '-', row[2], etc.
