@@ -1,42 +1,65 @@
 @startuml
 
+skinparam monochrome true
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam DefaultFontName arial
+skinparam DefaultFontSize 12
+skinparam ClassFontStyle bold
+skinparam linetype ortho
+hide empty fields
+hide circle
+
+
 title Soccerheatmap - Class Diagram
 
 class Player {
-  -int id
-  -int playerNumber
-  -Position position
-  -String name
+ - int id
+ - int playerNumber
+ - Position position
+ - String name
 
-  +Position getPosition()
-  +void setPosition(Position)
+ + getPosition() : Position
+ + setPosition(Position) : void
 }
 class Event {
-  'TO DO'
-
+ - Position event_position
 }
+
+class Corner {
+  - 
+}
+
+class Goal {
+  - 
+}
+
+class ShotOn {
+  - 
+}
+
 class Position {
--int x
--int y
+ - int x
+ - int y
 }
 
 class Team {
--List players
+ - List players
 }
 
 class Match {
--Team home
--Lineup homeLineup
--Team away
--Lineup awayLineup
+ - Team home
+ - Lineup homeLineup
+ - Team away
+ - Lineup awayLineup
 }
 
 class Lineup {
--Map lineup
+ - Map lineup
 
-+Position getPosition(int)
-+int getPlayer(Position)
-+Map getLineup()
++ getPosition(int) : Position
++ getPlayer(Position) : int
++ getLineup() : Map
 }
 
 @enduml
