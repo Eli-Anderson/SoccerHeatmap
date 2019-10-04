@@ -48,7 +48,6 @@ class Player {
 }
 
 class Team {
- - List players
 }
 
 class Match {
@@ -74,11 +73,11 @@ Event <|-left- Goal
 Event <|- ShotOn
 
 Player --> Position
-Player <-up- Team
+Team -down-> Player : 1..n
 Lineup --> Position
 Event --> Position
 
-Match --> Lineup
+Match --> Lineup : 2..4
 
 
 
