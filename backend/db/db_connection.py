@@ -1,6 +1,8 @@
 import cx_Oracle
 from pprint import pprint
 
+test = open("test.txt","r")
+print(test)
 
 con = cx_Oracle.connect("424-ML6-U1", "DBS2_2018", "myservice")
 cursor = con.cursor()
