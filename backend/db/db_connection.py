@@ -5,6 +5,8 @@ from pprint import pprint
 config_file = open(os.path.join(sys.path[0], "db_config.conf"), 'r')
 username = config_file.readline()
 password = config_file.readline()
+username = username.replace('\n', '').replace('\r', '')
+password = password.replace('\n', '').replace('\r', '')
 
 print(username)
 print(password)
