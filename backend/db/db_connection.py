@@ -1,8 +1,13 @@
 import cx_Oracle
+import os, sys
 from pprint import pprint
 
+config_file = open(os.path.join(sys.path[0], "db_config.conf"), 'r')
+username = config_file.readline()
+password = config_file.readline()
 
-con = cx_Oracle.connect("424-ML6-U1", "DBS2_2018", "myservice")
+
+con = cx_Oracle.connect(username, password, "myservice")
 cursor = con.cursor()
 
 cursor.execute('select user from dual') # use triple quotes if you want to spread your query across multiple lines
