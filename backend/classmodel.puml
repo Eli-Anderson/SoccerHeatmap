@@ -1,5 +1,6 @@
 @startuml
 
+' ###### skin parameters
 skinparam monochrome true
 skinparam shadowing false
 skinparam classAttributeIconSize 0
@@ -11,36 +12,39 @@ hide empty fields
 hide circle
 
 
-title Soccerheatmap - Class Diagram
+title: <size:20> <b> Soccerheatmap - Class Diagram </b> </size>
+
+' ###### classes and their definitions
+class Event {
+ - boolean success
+}
+
+class Corner {
+
+}
+
+class Goal {
+
+}
+
+class ShotOn {
+
+}
+
+class Position {
+ - int elapsed
+ - int elapsed_plus
+ - int x
+ - int y
+}
 
 class Player {
  - int id
  - int playerNumber
- - Position position
  - String name
 
  + getPosition() : Position
  + setPosition(Position) : void
-}
-class Event {
- - Position event_position
-}
-
-class Corner {
-  - 
-}
-
-class Goal {
-  - 
-}
-
-class ShotOn {
-  - 
-}
-
-class Position {
- - int x
- - int y
 }
 
 class Team {
@@ -49,8 +53,8 @@ class Team {
 
 class Match {
  - Team home
- - Lineup homeLineup
  - Team away
+ - Lineup homeLineup
  - Lineup awayLineup
 }
 
@@ -61,5 +65,21 @@ class Lineup {
 + getPlayer(Position) : int
 + getLineup() : Map
 }
+
+
+' ###### Dependencies
+
+Event <|-down- Corner
+Event <|-left- Goal
+Event <|- ShotOn
+
+Player --> Position
+Player <-up- Team
+Lineup --> Position
+Event --> Position
+
+Match --> Lineup
+
+
 
 @enduml
