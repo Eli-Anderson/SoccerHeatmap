@@ -2,14 +2,12 @@ import cx_Oracle
 import os, sys
 from pprint import pprint
 
-<<<<<<< HEAD
 config_file = open(os.path.join(sys.path[0], "db_config.conf"), 'r')
 username = config_file.readline()
 password = config_file.readline()
-=======
-test = open("test.txt","r")
-print(test)
->>>>>>> f764cf1410e688cbe03d54e0230960221686253b
+
+print(username)
+print(password)
 
 
 con = cx_Oracle.connect(username, password, "myservice")
