@@ -8,10 +8,6 @@ password = config_file.readline()
 username = username.replace('\n', '').replace('\r', '')
 password = password.replace('\n', '').replace('\r', '')
 
-print(username)
-print(password)
-
-
 con = cx_Oracle.connect(username, password, "myservice")
 cursor = con.cursor()
 
