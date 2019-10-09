@@ -12,9 +12,20 @@ class DB_Factory:
         res = self.connection.cursor.fetchall()
         pprint(res)
     
-    def searchTeamsMatches(self, team_name):
+    def search_home_teams_matches(self, team_name):
          # String translation in SQL Query
-        statement = 'select team.long_name, match.result from soccer02.team inner join soccer02.match on team.team_id = match.team_hometeam_id where long_name = \'' + team_name + '\''
+        statement = 'select team.long_name, match.result from soccer02.team ' \
+                    'inner join soccer02.match on team.team_id = match.team_hometeam_id ' \
+                    'where long_name = \'' + team_name + '\''
+        self.connection.cursor.execute(statement)
+        res = self.connection.cursor.fetchall()
+        pprint(res)
+
+    def search_away_teams_matches(self, team_name):
+        # String translation in SQL Query
+        statement = 'select team.long_name, match.result from soccer02.team ' \
+                    'inner join soccer02.match on team.team_id = match.team_awayteam_id ' \
+                    'where long_name = \'' + team_name + '\''
         self.connection.cursor.execute(statement)
         res = self.connection.cursor.fetchall()
         pprint(res)
@@ -23,4 +34,6 @@ class DB_Factory:
         self.connection.close()
 
 db = DB_Factory()
-db.searchTeamsMatches('Tubize')
+db.search_home_teams_matches('Tubize')
+db.search_away_teams_matches('Tubize')
+db.close()
