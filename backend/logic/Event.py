@@ -1,5 +1,6 @@
-class Event:
-    
-    def __init__(self, success, position):
-        self._success = success
-        self._position = position
+#abstract class
+class Event(object):
+
+    def getPosition(self):
+        #Reminder
+        raise NotImplementedError("in abgeleiteter Klasse definieren")
