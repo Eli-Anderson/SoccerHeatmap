@@ -32,8 +32,3 @@ class DB_Factory:
 
     def close(self):
         self.connection.close()
-
-db = DB_Factory()
-db.search_home_teams_matches('Tubize')
-db.search_away_teams_matches('Tubize')
-db.close()
