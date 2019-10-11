@@ -1,8 +1,19 @@
 from db_factory import DB_Factory
+from team import Team
 
 db = DB_Factory()
 
-#query-query-test
+#print(db.list_all_teams())
+
+#print(db.list_all_teams())
+
+print(db.search_team("Aberdeen"))
+
+#aber = Team(db.search_team("Aberdeen"))
+#print(aber)
+
+
+
 """
 teams = db.list_all_teams()
 print(teams)
@@ -16,10 +27,12 @@ print(team)
 print(type(team))
 
 team = db.search_team(str(teams[1]))
-print(teams[0])"""
+print(teams[0])
+"""
 
-#listtest
-"""liste = ['Bayern münchen', 'peter hans', '7']
+
+"""
+liste = ['Bayern münchen', 'peter hans', '7']
 print(liste)
 print(type(liste))
 print(liste[0])
@@ -29,7 +42,8 @@ liste2 = ('Bayern münchen', 'peter hans', '7')
 print(liste2)
 print(type(liste2))
 print(liste2[0])
-print(type(liste2[0]))"""
+print(type(liste2[0]))
+"""
 
-db.close()
+#db.close()
 
