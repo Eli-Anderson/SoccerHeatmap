@@ -6,12 +6,16 @@ class DB_Factory:
     # This is a classvariable meaning all instances access to the same connection
     connection = Connection()
 
+    # Returns all teams as a stringlist by converting the query-tupel-results in a list of strings
     def list_all_teams(self):
         statement = 'select distinct long_name from soccer02.team'
         self.connection.cursor.execute(statement)
-        res = self.connection.cursor.fetchall()
-        pprint(res)
-        return res
+        res_tupel = self.connection.cursor.fetchall()
+        res_string_list = [str(i[0]) for i in res_tupel]
+        pprint(res_tupel)
+        pprint(res_string_list)
+        pprint(self.connection.cursor.description)
+        return res_string_list
 
     def search_team(self, team_name):
         # String translation in SQL Query
