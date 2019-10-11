@@ -1,6 +1,5 @@
 import cx_Oracle
 import os, sys
-from pprint import pprint
 
 # this class is responsible for the connection to the database.
 # please change only the credentials in the file named "db_config.conf"!

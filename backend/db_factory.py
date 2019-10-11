@@ -2,7 +2,8 @@ from db_connection import Connection
 from pprint import pprint
 
 class DB_Factory:
-
+    
+    # This is a classvariable meaning all instances access to the same connection
     connection = Connection()
 
     def searchTeam(self, team_name):
