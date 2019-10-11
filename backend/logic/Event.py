@@ -1,5 +1,6 @@
+from abc import ABC, abstractclassmethod
 #abstract class
-class Event(object):
+class Event(ABC):
 
     def getPosition(self):
         #Reminder

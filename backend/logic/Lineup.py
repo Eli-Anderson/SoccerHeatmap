@@ -4,8 +4,8 @@ class Lineup:
             self._lineup = lineup
             self._position = position
        
-        def getPosition(self, int):
+        def getPosition(self, player_number):
             return self._position
        
         def getPlayer(self, position):
-            return self._int
+            return self._position
