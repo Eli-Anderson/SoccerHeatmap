@@ -53,11 +53,11 @@ function App(props) {
                 <Grid
                     id="filterToolbar"
                     container
-                    direction="row"
+                    direction="col"
                     justify="space-between"
                 >
                     <EventSelect />
-                    <Grid item>
+                    <Grid item xs={4}>
                         <Grid
                             container
                             spacing={5}
@@ -65,13 +65,16 @@ function App(props) {
                             justify="flex-start"
                             alignItems="flex-end"
                         >
-                            <Grid item>
+                            <Grid item xs={4}>
                                 <TeamSelect />
                             </Grid>
-                            <Grid item>
+                            <Grid item xs={4}>
                                 <PlayerSelect />
                             </Grid>
                         </Grid>
+                    </Grid>
+                    <Grid item xs = {12}>
+                        <img src="field.jpg" />
                     </Grid>
                 </Grid>
             </AppContext.Provider>
