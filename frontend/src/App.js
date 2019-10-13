@@ -50,33 +50,69 @@ function App(props) {
             >
                 <h3>Soccer Analyzer</h3>
                 {/* Grid helps us manage the layout of elements */}
-                <Grid
-                    id="filterToolbar"
-                    container
-                    direction="col"
-                    justify="space-between"
-                >
-                    <EventSelect />
-                    <Grid item xs={4}>
-                        <Grid
-                            container
-                            spacing={5}
-                            direction="row"
-                            justify="flex-start"
-                            alignItems="flex-end"
-                        >
-                            <Grid item xs={4}>
-                                <TeamSelect />
-                            </Grid>
-                            <Grid item xs={4}>
-                                <PlayerSelect />
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                    <Grid item xs = {12}>
-                        <img src="field.jpg" />
-                    </Grid>
-                </Grid>
+   
+
+<Grid
+
+	id="filterToolbar"
+
+	container
+
+	direction="col"
+
+	justify="space-between"
+
+>
+
+	<EventSelect />
+
+	<Grid item xs={4}>
+
+		<Grid
+
+			container
+
+			spacing={5}
+
+			direction="row"
+
+			justify="flex-start"
+
+			alignItems="flex-end"
+
+		>
+
+			<Grid item xs={4}>
+
+				<TeamSelect />
+
+			</Grid>
+
+			<Grid item xs={4}>
+
+				<PlayerSelect />
+
+			</Grid>
+
+		</Grid>
+
+	</Grid>
+
+</Grid>
+
+{/* Content body */}
+
+<Grid container>
+
+	<Grid item xs = {12}>
+
+		<img src="field.jpg" />
+
+	</Grid>
+
+</Grid>
+
+
             </AppContext.Provider>
         </div>
     );
