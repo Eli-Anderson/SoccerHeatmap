@@ -22,6 +22,9 @@ const AppContext = React.createContext({
 const useStyles = makeStyles({
     app: {
         margin: 20
+    },
+    content: { 
+        marginTop: 30
     }
 });
 
@@ -50,65 +53,68 @@ function App(props) {
             >
                 <h3>Soccer Analyzer</h3>
                 {/* Grid helps us manage the layout of elements */}
-   
+                
 
 <Grid
 
-	id="filterToolbar"
+id="filterToolbar"
 
-	container
+container
 
-	direction="col"
+direction="col"
 
-	justify="space-between"
+justify="space-between"
 
 >
 
-	<EventSelect />
+<EventSelect />
 
-	<Grid item xs={4}>
+<Grid item xs={4}>
 
-		<Grid
+    <Grid
 
-			container
+        container
 
-			spacing={5}
+        spacing={5}
 
-			direction="row"
+        direction="row"
 
-			justify="flex-start"
+        justify="flex-start"
 
-			alignItems="flex-end"
+        alignItems="flex-end"
 
-		>
+    >
 
-			<Grid item xs={4}>
+        <Grid item xs={4}>
 
-				<TeamSelect />
+            <TeamSelect />
 
-			</Grid>
+        </Grid>
 
-			<Grid item xs={4}>
+        <Grid item xs={4}>
 
-				<PlayerSelect />
+            <PlayerSelect />
 
-			</Grid>
+        </Grid>
 
-		</Grid>
+    </Grid>
 
-	</Grid>
+</Grid>
 
 </Grid>
 
 {/* Content body */}
 
-<Grid container>
+<Grid 
+    container
+    className={classes.content}
+>
 
-	<Grid item xs = {12}>
+<Grid item xs = {12}>
 
-		<img src="field.jpg" />
+    <img src="field.jpg" />
 
-	</Grid>
+</Grid>
 
 </Grid>
 
