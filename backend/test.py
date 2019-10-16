@@ -3,9 +3,9 @@ from team import Team
 
 db = DB_Factory()
 
-#print(db.list_all_teams())
-
 print(db.list_all_teams())
+
+#print(db.list_all_teams())
 
 print(db.search_team("Aberdeen"))
 
@@ -45,5 +45,4 @@ print(liste2[0])
 print(type(liste2[0]))
 """
 
-#db.close()
-
+db.close()
