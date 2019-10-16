@@ -5,9 +5,9 @@ db = DB_Factory()
 
 #print(db.list_all_teams())
 
-print(db.list_all_teams())
+print(db.list_all_matches())
 
-print(db.search_team("Aberdeen"))
+# print(db.search_team("Aberdeen"))
 
 #aber = Team(db.search_team("Aberdeen"))
 #print(aber)

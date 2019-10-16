@@ -6,9 +6,18 @@ class DB_Factory:
     # This is a classvariable meaning all instances access to the same connection
     connection = Connection()
 
-    # Returns all teams as a stringlist by converting the query-tupel-results in a list of strings
+    # Returns all teams as a string-list by converting the query-tupel-results in a list of strings
     def list_all_teams(self):
         statement = 'select distinct long_name from soccer02.team'
+        self.connection.cursor.execute(statement)
+        res_tupel = self.connection.cursor.fetchall()
+        res_string_list = [str(i[0]) for i in res_tupel]
+        # pprint(self.connection.cursor.description)
+        return res_string_list
+    
+    # Returns all matches as a string-list
+    def list_all_matches(self):
+        statement = 'select distinct "date", result, home_team_goal, away_team_goal from soccer02.match'
         self.connection.cursor.execute(statement)
         res_tupel = self.connection.cursor.fetchall()
         res_string_list = [str(i[0]) for i in res_tupel]
