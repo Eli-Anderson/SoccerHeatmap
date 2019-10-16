@@ -5,7 +5,7 @@ db = DB_Factory()
 
 #print(db.list_all_teams())
 
-#print(db.list_all_teams())
+print(db.list_all_teams())
 
 print(db.search_team("Aberdeen"))
 
