@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
     Select,
     MenuItem,
@@ -6,6 +6,7 @@ import {
     FormControl,
     InputLabel
 } from "@material-ui/core";
+import { AppContext } from "./App";
 
 const dummyFetch = () => {
     return new Promise(resolve => {
@@ -28,7 +29,8 @@ const useStyles = makeStyles({
 export const EventSelect = props => {
     const classes = useStyles(props);
 
-    const [selected, setSelected] = useState("");
+    const { event, setEvent } = useContext(AppContext);
+
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
 
@@ -48,8 +50,8 @@ export const EventSelect = props => {
                 <Select
                     id="eventSelect"
                     className={classes.select}
-                    value={selected}
-                    onChange={ev => setSelected(ev.target.value)}
+                    value={event}
+                    onChange={ev => setEvent(ev.target.value)}
                 >
                     <MenuItem className={classes.firstItem} key="all" value="">
                         All
