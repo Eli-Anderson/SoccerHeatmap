@@ -1,3 +1,6 @@
+import json
+from db_factory import DB_Factory
+db = DB_Factory()
 # This is the API for the communication between the back-end and the front-end
 # Here are all the functions defined which are to be used.
 
@@ -27,8 +30,11 @@
 #
 # ...for the players...
 # x- Returns all players.
-# x- Gets a player name as a string. Returns the given player with the current 
-#   team he is playing in.
+def allPlayers(self): 
+    #print(dummy)
+    result = json.dumps(db.list_all_players)
+    return result
+# 
 #
 # ...for the matches...
 # x- Returns all matches.
@@ -37,3 +43,4 @@
 #   the match.
 #
 #################################################################################
+db.close()
