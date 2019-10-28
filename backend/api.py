@@ -3,7 +3,7 @@ from db_factory import DB_Factory
 from flask import Flask
 db = DB_Factory()
 app = Flask(__name__)
-app.run(port=3000, debug = True)
+app.run(port=3001, debug = True)
 # This is the API for the communication between the back-end and the front-end
 # Here are all the functions defined which are to be used.
 
@@ -35,7 +35,7 @@ app.run(port=3000, debug = True)
 # x- Returns all players.
 @app.route("/")
 def allPlayers(self): 
-    #print(dummy)
+    print("helloworl")
     result = json.dumps(db.list_all_players)
     return result
 # 
