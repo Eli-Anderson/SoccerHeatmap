@@ -126,7 +126,6 @@ function App(props) {
                 <Grid container className={classes.content}>
                     <Grid item>
                         <Heatmap />
-                        <img src="field.jpg" />
                     </Grid>
                 </Grid>
             </AppContext.Provider>
