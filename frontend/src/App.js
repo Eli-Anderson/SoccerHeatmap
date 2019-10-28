@@ -10,14 +10,15 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload. GIMME SOME REST PLS!
           
+          
         </p>
         <a
           className="App-link"
-          href="https://reactjs.org"
+          href="localhost:3001/"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React
+          get_all_players_as_json_array
         </a>
       </header>
     </div>
