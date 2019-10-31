@@ -79,11 +79,6 @@ function App(props) {
 
     return (
         <div className={"App " + classes.app}>
-            {/* Include the roboto font for MaterialUI */}
-            <link
-                rel="stylesheet"
-                href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-            />
             <AppContext.Provider
                 // pass our state and mutators on to whichever children need them
                 value={{
