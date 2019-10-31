@@ -17,7 +17,8 @@ const AppContext = React.createContext({
     setTeam: null,
     player: null,
     setPlayer: null,
-    data: null
+    data: null,
+    dataLoading: false
 });
 
 // define our styles here. this transforms css styles to a class so it is easier to apply
@@ -30,10 +31,15 @@ const useStyles = makeStyles({
     }
 });
 
+/**
+ * This is a dummy function for getting the Event data based on the provided filter parameters.
+ * The data is asynchronously returned and depends on the event type, team, and player selected.
+ */
 function getData({ event, team, player }) {
     return new Promise(resolve => {
         setTimeout(() => {
             if (!player) {
+                // currently only returns data when USA is selected
                 resolve(
                     {
                         USA: [
@@ -58,8 +64,74 @@ function getData({ event, team, player }) {
                         ]
                     }[team]
                 );
+            } else {
+                // currently only returns data when USA's players are selected
+                resolve(
+                    {
+                        "Andrea Pirlo": [
+                            {
+                                eventType: "penalty",
+                                player1: "Andrea Pirlo",
+                                player2: "Robin van Persie",
+                                match: 29281933,
+                                date: "2017-08-11",
+                                time: "15:15",
+                                location: 13
+                            },
+                            {
+                                eventType: "goal",
+                                player1: "Andrea Pirlo",
+                                player2: null,
+                                match: 29281933,
+                                date: "2017-08-11",
+                                time: "21:56",
+                                location: 4
+                            }
+                        ],
+                        "Robin van Persie": [
+                            {
+                                eventType: "penalty",
+                                player1: "Robin van Persie",
+                                player2: "Andrea Pirlo",
+                                match: 29281933,
+                                date: "2017-08-11",
+                                time: "15:15",
+                                location: 13
+                            },
+                            {
+                                eventType: "goal",
+                                player1: "Robin van Persie",
+                                player2: null,
+                                match: 29281933,
+                                date: "2017-08-11",
+                                time: "21:56",
+                                location: 4
+                            }
+                        ],
+                        "Yaya Toure": [
+                            {
+                                eventType: "penalty",
+                                player1: "Yaya Toure",
+                                player2: "Andrea Pirlo",
+                                match: 29281933,
+                                date: "2017-08-11",
+                                time: "15:15",
+                                location: 13
+                            },
+                            {
+                                eventType: "goal",
+                                player1: "Yaya Toure",
+                                player2: null,
+                                match: 29281933,
+                                date: "2017-08-11",
+                                time: "21:56",
+                                location: 4
+                            }
+                        ]
+                    }[player]
+                );
             }
-            resolve();
+            // wait a random time, so we can ensure that loaders are working
         }, Math.random() * 3000);
     });
 }
@@ -70,10 +142,14 @@ function App(props) {
     const [team, setTeam] = useState("");
     const [player, setPlayer] = useState("");
     const [data, setData] = useState([]);
+    const [dataLoading, setDataLoading] = useState(false);
 
     useEffect(() => {
-        if (event && team) {
-            getData({ event, team, player }).then(d => setData(d));
+        if (team) {
+            setDataLoading(true);
+            getData({ event, team, player })
+                .then(d => setData(d))
+                .then(() => setDataLoading(false));
         }
     }, [event, team, player]);
 
@@ -88,7 +164,8 @@ function App(props) {
                     setTeam,
                     player,
                     setPlayer,
-                    data
+                    data,
+                    dataLoading
                 }}
             >
                 <h3>Soccer Analyzer</h3>
