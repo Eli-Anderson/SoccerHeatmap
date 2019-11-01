@@ -202,7 +202,7 @@ function App(props) {
                 </Grid>
                 <a
                     className="App-link"
-                    href="localhost:3001/"
+                    href="localhost:3001/lists/allPlayers"
                     target="_blank"
                     rel="noopener noreferrer"
                 >
