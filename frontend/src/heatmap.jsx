@@ -1,9 +1,10 @@
 import React, { useContext, useRef, useEffect } from "react";
 import { AppContext } from "./App";
 import h337 from "heatmap.js";
+import { LinearProgress, Fade } from "@material-ui/core";
 
 export const Heatmap = props => {
-    const { data } = useContext(AppContext);
+    const { data, dataLoading } = useContext(AppContext);
 
     const containerRef = useRef();
 
@@ -25,35 +26,49 @@ export const Heatmap = props => {
     }, []);
 
     useEffect(() => {
-        // test heatmap with random data
-        let randomData = [];
-        const n = 25 + Math.random() * 50;
-        for (let i = 0; i < n; i++) {
-            randomData.push({
-                x: Math.round(Math.random() * containerRef.current.offsetWidth),
-                y: Math.round(
-                    Math.random() * containerRef.current.offsetHeight
-                ),
-                value: Math.round(Math.random() * 100)
+        if (data && data.length) {
+            // test heatmap with random data
+            let randomData = [];
+            const n = 25 + Math.random() * 50;
+            for (let i = 0; i < n; i++) {
+                randomData.push({
+                    x: Math.round(
+                        Math.random() * containerRef.current.offsetWidth
+                    ),
+                    y: Math.round(
+                        Math.random() * containerRef.current.offsetHeight
+                    ),
+                    value: Math.round(Math.random() * 100)
+                });
+            }
+
+            /* replace randomData with the real data when the time comes
+             * the data is expected to be in the form:
+             * [
+             *   { x: int, y: int, value: int },
+             *   ...
+             * ]
+             */
+            heatmap.current.setData({
+                max: 100,
+                data: randomData
+            });
+        } else {
+            heatmap.current.setData({
+                max: 100,
+                data: []
             });
         }
-
-        /* replace randomData with the real data when the time comes
-         * the data is expected to be in the form:
-         * [
-         *   { x: int, y: int, value: int },
-         *   ...
-         * ]
-         */
-        heatmap.current.setData({
-            max: 100,
-            data: randomData
-        });
     }, [data]);
 
     return (
-        <div ref={containerRef}>
-            <img src="field.svg" />
+        <div>
+            <Fade in={dataLoading}>
+                <LinearProgress style={{ height: 6 }} variant="query" />
+            </Fade>
+            <div ref={containerRef}>
+                <img src="field.svg" />
+            </div>
         </div>
     );
 };
