@@ -201,10 +201,12 @@ function App(props) {
                     </Grid>
                 </Grid>
                 <a
+
                     className="App-link"
-                    href="localhost:3001/"
+                    href="localhost:3001/lists/allPlayers"
                     target="_blank"
                     rel="noopener noreferrer"
+
                 >
                     test get_all_players_as_json_array
                 </a>
