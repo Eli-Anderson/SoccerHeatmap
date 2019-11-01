@@ -128,6 +128,14 @@ function App(props) {
                         <Heatmap />
                     </Grid>
                 </Grid>
+                <a
+                  className="App-link"
+                  href="localhost:3001/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  test get_all_players_as_json_array
+                </a>
             </AppContext.Provider>
         </div>
     );

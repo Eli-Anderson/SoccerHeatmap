@@ -1,3 +1,9 @@
+import json
+from db_factory import DB_Factory
+from flask import Flask
+db = DB_Factory()
+app = Flask(__name__)
+
 # This is the API for the communication between the back-end and the front-end
 # Here are all the functions defined which are to be used.
 
@@ -27,8 +33,12 @@
 #
 # ...for the players...
 # x- Returns all players.
-# x- Gets a player name as a string. Returns the given player with the current 
-#   team he is playing in.
+@app.route("/")
+def allPlayers():
+    dummy = db.list_all_players()
+    result = json.dumps(dummy)
+    return result
+
 #
 # ...for the matches...
 # x- Returns all matches.
@@ -37,3 +47,5 @@
 #   the match.
 #
 #################################################################################
+app.run(port=3001, debug = True)
+db.close()

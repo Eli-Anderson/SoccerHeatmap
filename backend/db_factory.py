@@ -34,11 +34,11 @@ class DB_Factory:
         return res_string_list
     
     def list_all_players(self):
-        # String translation in SQL Query
-        statement = 'select name, birthday from soccer02.player'
+        # String translation in SQL Query REMOVED BIRTHDAY
+        statement = 'select name from soccer02.player'
         self.connection.cursor.execute(statement)
         res = self.connection.cursor.fetchall()
-        pprint(res)
+        #pprint(res)
         return res
 
     def list_event_by_name(self, event_type):
