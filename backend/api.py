@@ -20,7 +20,7 @@ app = Flask(__name__)
 #
 # ... for the events...
 # x- Returns all types of events.
-@app.route("lists/allEventTypes")
+@app.route("/lists/allEventTypes")
 def allEventTypes():
     dummy = db.list_all_events()
     result = json.dumps(dummy)
@@ -32,13 +32,13 @@ def allEventTypes():
 #
 # ...for the teams...
 # x- Returns all teams.
-@app.route("lists/allTeams")
+@app.route("/lists/allTeams")
 def allTeams():
     dummy = db.list_all_teams()
     result = json.dumps(dummy)
     return result
 # x- Gets a team name as a string. Returns all matches of the team and results
-@app.route("search/teamsMatches")
+@app.route("/search/teamsMatches")
 def teamMatches(team_name):
     dummy = db.search_home_teams_matches(team_name)
     result = json.dumps(dummy)
@@ -56,7 +56,7 @@ def allPlayers():
 #
 # ...for the matches...
 # x- Returns all matches.
-@app.route("lists/allMatches")
+@app.route("/lists/allMatches")
 def allMatches():
     dummy = db.list_all_matches()
     result = json.dumps(dummy)
@@ -64,7 +64,7 @@ def allMatches():
 # x- Gets a the name of the home team and the away team and the date of the 
 #   played match as a string. Returns players, events and the result of 
 #   the match.
-@app.route("search/Match")
+@app.route("/search/Match")
 def match(home_team, away_team, date):
     dummy = db.match_details(home_team, away_team, date)
     result = json.dumps(dummy)
