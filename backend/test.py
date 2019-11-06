@@ -8,11 +8,11 @@ db = DB_Factory()
 #print(db.list_all_players())
 
 #print(db.search_team("Aberdeen"))
-s
+
 #aber = Team(db.search_team("Aberdeen"))
 #print(aber)
 
-print(db.player_heatmap("Ander Capa"))
+print(db.player_heatmap_fouls("Ander Capa"))
 
 ##################### TESTS ###############################
 
