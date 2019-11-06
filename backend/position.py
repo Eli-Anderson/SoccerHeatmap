@@ -5,3 +5,4 @@ class Position:
         self._y = y
         self._elapsed = elapsed
         self._elapsed_plus = elapsed_plus
+

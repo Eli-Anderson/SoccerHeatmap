@@ -5,14 +5,16 @@ db = DB_Factory()
 
 #print(db.list_all_teams())
 
-print(db.list_all_players())
+#print(db.list_all_players())
 
-# print(db.search_team("Aberdeen"))
+#print(db.search_team("Aberdeen"))
 
 #aber = Team(db.search_team("Aberdeen"))
 #print(aber)
 
+print(db.player_heatmap_fouls("Ander Capa"))
 
+##################### TESTS ###############################
 
 """
 teams = db.list_all_teams()
