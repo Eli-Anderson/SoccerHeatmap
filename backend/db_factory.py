@@ -17,7 +17,8 @@ class DB_Factory:
         return res_string_list
     
     def search_team(self, team_name):
-        statement = 'select long_name, short_name from soccer02.team where long_name = \'' + team_name + '\''
+        search_string = '' + team_name
+        statement = 'select long_name, short_name from soccer02.team where upper(long_name) like \'' + search_string.upper() + '\''
         self.connection.cursor.execute(statement)
         res_tupel = self.connection.cursor.fetchall()
         print("#### Type: ", type(res_tupel))
@@ -41,8 +42,9 @@ class DB_Factory:
         return res
 
     def list_event_by_name(self, event_type):
+        search_string = '' + event_type
         statement = 'select * from soccer02.matchevent ' \
-                    'where event_type = \'' + event_type + '\''
+                    'where upper(event_type) like \'' + search_string.upper() + '\''
         self.connection.cursor.execute(statement)
         res = self.connection.cursor.fetchall()
         pprint(res)
@@ -68,29 +70,32 @@ class DB_Factory:
         pprint(res_string_list)
         pprint(self.connection.cursor.description)
         return res_string_list
+
     # TODO
     def match_details(self, home_team_name, away_team_name, date):
         statement = 'select player.name, match.result from soccer02.player, soccer02.match ' \
                     'inner join soccer02.match on team.team_id = match.team_awayteam_id ' \
-                    'where long_name = \'' + home_team_name + '\''
+                    'where upper(long_name) like \'' + home_team_name + '\''
         self.connection.cursor.execute(statement)
         res = self.connection.cursor.fetchall()
         pprint(res)
         return res
 
     def search_home_teams_matches(self, team_name):
+        search_string = '' + team_name
         statement = 'select team.long_name, match.result from soccer02.team ' \
                     'inner join soccer02.match on team.team_id = match.team_hometeam_id ' \
-                    'where long_name = \'' + team_name + '\''
+                    'where upper(long_name) like \'' + search_string.upper() + '\''
         self.connection.cursor.execute(statement)
         res = self.connection.cursor.fetchall()
         pprint(res)
         return res
 
     def search_away_teams_matches(self, team_name):
+        search_string = '' + team_name
         statement = 'select team.long_name, match.result from soccer02.team ' \
                     'inner join soccer02.match on team.team_id = match.team_awayteam_id ' \
-                    'where long_name = \'' + team_name + '\''
+                    'where upper(long_name) like \'' + search_string.upper() + '\''
         self.connection.cursor.execute(statement)
         res = self.connection.cursor.fetchall()
         pprint(res)
@@ -98,10 +103,11 @@ class DB_Factory:
     
     # Heat-map for all attempts on goal of a player from all data
     def player_heatmap_fouls(self, player_name):
+        search_string = '' + player_name
         statement = 'select pos_x, pos_y ' \
                     'from soccer02.player ' \
                     'join soccer02.matchevent on soccer02.player.player_id = soccer02.matchevent.player_player_id ' \
-                    'where soccer02.player.name like \'' + player_name + '\' and event_type like \'foulcommit\''
+                    'where upeer(soccer02.player.name) like \'' + search_string.upper() + '\' and event_type like \'foulcommit\''
         self.connection.cursor.execute(statement)
         res = self.connection.cursor.fetchall()
         pprint(res)

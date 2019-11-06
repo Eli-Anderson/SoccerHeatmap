@@ -72,12 +72,14 @@ def match(home_team, away_team, date):
     result = json.dumps(dummy)
     return result
 
+################################################# Heatmap
+
 """ Heat-map for all attempts on goal of a player from all data
 :param player_name: Name of the player.
 :returns: Result as JSON.
 """
 @app.route("#TODO")
-def player_heatmap(player_name):
+def player_heatmap_fouls(player_name):
     dummy = db.player_heatmap(player_name)
     result = json.dumps(dummy)
     return result
