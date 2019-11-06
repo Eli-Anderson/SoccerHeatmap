@@ -97,11 +97,11 @@ class DB_Factory:
         return res
     
     # Heat-map for all attempts on goal of a player from all data
-    def player_heatmap(self, player_name):
+    def player_heatmap_goals(self, player_name):
         statement = 'select * ' \
                     'from soccer02.player ' \
                     'join soccer02.matchevent on soccer02.player.player_id = soccer02.matchevent.player_player_id ' \
-                    'where soccer02.player.name like \'' + player_name + '\''
+                    'where soccer02.player.name like \'' + player_name + '\' and event_type like \'goal\''
         self.connection.cursor.execute(statement)
         res = self.connection.cursor.fetchall()
         pprint(res)
