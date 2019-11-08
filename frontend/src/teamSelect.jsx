@@ -8,15 +8,6 @@ import {
 } from "@material-ui/core";
 import { AppContext } from "./App";
 
-const dummyFetch = () => {
-    return new Promise(resolve => {
-        const teamNames = ["England", "France", "USA", "Spain"];
-        setTimeout(() => {
-            resolve(teamNames);
-        }, Math.random() * 3000);
-    });
-};
-
 // define our styles here. this transforms css styles to a class so it is easier to apply
 const useStyles = makeStyles({
     select: {
@@ -37,10 +28,11 @@ export const TeamSelect = props => {
     // this will run only on the initial render
     useEffect(() => {
         // fetch data here
-        setLoading(true);
-        dummyFetch()
-            .then(setData)
-            .then(() => setLoading(false));
+        // setLoading(true);
+        // fetch("http://localhost:3001/lists/allTeams")
+        //     .then(data => data.json())
+        //     .then(setData)
+        //     .then(() => setLoading(false));
     }, []);
 
     // if we are currently fetching data, return some kind of loading element
@@ -62,7 +54,7 @@ export const TeamSelect = props => {
                             Loading...
                         </MenuItem>
                     ) : (
-                        data.map(x => (
+                        props.teams.map(x => (
                             <MenuItem key={x} value={x}>
                                 {x}
                             </MenuItem>

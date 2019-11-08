@@ -6,6 +6,7 @@ import { EventSelect } from "./eventSelect";
 import { PlayerSelect } from "./playerSelect";
 import { useState } from "react";
 import { Heatmap } from "./heatmap";
+import { MatchSelect } from "./matchSelect";
 
 // create our context. The object inside is not necessary, but may help with knowing what
 // fields we are keeping track of.
@@ -17,6 +18,8 @@ const AppContext = React.createContext({
     setTeam: null,
     player: null,
     setPlayer: null,
+    match: null,
+    setMatch: null,
     data: null,
     dataLoading: false
 });
@@ -31,127 +34,58 @@ const useStyles = makeStyles({
     }
 });
 
-/**
- * This is a dummy function for getting the Event data based on the provided filter parameters.
- * The data is asynchronously returned and depends on the event type, team, and player selected.
- */
-function getData({ event, team, player }) {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            if (!player) {
-                // currently only returns data when USA is selected
-                resolve(
-                    {
-                        USA: [
-                            {
-                                eventType: "goal",
-                                player1: "Christiano Ronaldo",
-                                player2: "Eden Hazard",
-                                match: 28192831,
-                                date: "2017-06-13",
-                                time: "37:42",
-                                location: 15
-                            },
-                            {
-                                eventType: "penalty",
-                                player1: "Zlatan Ibrahimovic",
-                                player2: "Robin van Persie",
-                                match: 29281923,
-                                date: "2017-07-18",
-                                time: "17:12",
-                                location: 16
-                            }
-                        ]
-                    }[team]
-                );
-            } else {
-                // currently only returns data when USA's players are selected
-                resolve(
-                    {
-                        "Andrea Pirlo": [
-                            {
-                                eventType: "penalty",
-                                player1: "Andrea Pirlo",
-                                player2: "Robin van Persie",
-                                match: 29281933,
-                                date: "2017-08-11",
-                                time: "15:15",
-                                location: 13
-                            },
-                            {
-                                eventType: "goal",
-                                player1: "Andrea Pirlo",
-                                player2: null,
-                                match: 29281933,
-                                date: "2017-08-11",
-                                time: "21:56",
-                                location: 4
-                            }
-                        ],
-                        "Robin van Persie": [
-                            {
-                                eventType: "penalty",
-                                player1: "Robin van Persie",
-                                player2: "Andrea Pirlo",
-                                match: 29281933,
-                                date: "2017-08-11",
-                                time: "15:15",
-                                location: 13
-                            },
-                            {
-                                eventType: "goal",
-                                player1: "Robin van Persie",
-                                player2: null,
-                                match: 29281933,
-                                date: "2017-08-11",
-                                time: "21:56",
-                                location: 4
-                            }
-                        ],
-                        "Yaya Toure": [
-                            {
-                                eventType: "penalty",
-                                player1: "Yaya Toure",
-                                player2: "Andrea Pirlo",
-                                match: 29281933,
-                                date: "2017-08-11",
-                                time: "15:15",
-                                location: 13
-                            },
-                            {
-                                eventType: "goal",
-                                player1: "Yaya Toure",
-                                player2: null,
-                                match: 29281933,
-                                date: "2017-08-11",
-                                time: "21:56",
-                                location: 4
-                            }
-                        ]
-                    }[player]
-                );
-            }
-            // wait a random time, so we can ensure that loaders are working
-        }, Math.random() * 3000);
+const removeDuplicates = arr => {
+    const results = [];
+    arr.forEach(v => {
+        if (!results.includes(v)) results.push(v);
     });
-}
+    return results;
+};
 
 function App(props) {
     const classes = useStyles(props);
     const [event, setEvent] = useState("");
     const [team, setTeam] = useState("");
     const [player, setPlayer] = useState("");
+    const [match, setMatch] = useState("");
     const [data, setData] = useState([]);
     const [dataLoading, setDataLoading] = useState(false);
 
+    const [eventTypes, setEventTypes] = useState([]);
+    const [teams, setTeams] = useState([]);
+    const [matches, setMatches] = useState([]);
+
     useEffect(() => {
-        if (team) {
-            setDataLoading(true);
-            getData({ event, team, player })
-                .then(d => setData(d))
-                .then(() => setDataLoading(false));
-        }
-    }, [event, team, player]);
+        /*
+            Since Flask servers only allow a single connection at a time we need to request our
+            data 'synchronously'. We can fetch all the data in this function and just pass it down
+            to the children components (EventSelect, TeamSelect, etc)
+
+            The general format is fetch then return the json in the response then update our data
+        */
+        fetch("http://localhost:3001/lists/allTeams")
+            .then(response => response.json())
+            .then(setTeams)
+            // get the list of Event Types
+            .then(() => fetch("http://localhost:3001/lists/allEventTypes"))
+            .then(response => response.json())
+            .then(removeDuplicates)
+            .then(setEventTypes)
+            // get the list of All Matches that we can filter later when a Team is selected
+            // currently this does not return the data we need, only the dates of the matches
+            .then(() => fetch("http://localhost:3001/lists/allMatches"))
+            .then(response => response.json())
+            .then(setMatches)
+            .catch(error => console.error(error));
+    }, []);
+
+    useEffect(() => {
+        // if (team) {
+        //     fetch("http://localhost:3001/search/teamsMatches/" + team)
+        //         .then(response => response.json())
+        //         .then(setMatches);
+        // }
+    }, [team]);
 
     return (
         <div className={"App " + classes.app}>
@@ -164,6 +98,8 @@ function App(props) {
                     setTeam,
                     player,
                     setPlayer,
+                    match,
+                    setMatch,
                     data,
                     dataLoading
                 }}
@@ -181,13 +117,13 @@ function App(props) {
                     <Grid item>
                         <Grid container spacing={5} direction="row">
                             <Grid item>
-                                <EventSelect />
+                                <EventSelect eventTypes={eventTypes} />
                             </Grid>
                             <Grid item>
-                                <TeamSelect />
+                                <TeamSelect teams={teams} />
                             </Grid>
                             <Grid item>
-                                <PlayerSelect />
+                                <MatchSelect matches={matches} />
                             </Grid>
                         </Grid>
                     </Grid>
@@ -201,12 +137,10 @@ function App(props) {
                     </Grid>
                 </Grid>
                 <a
-
                     className="App-link"
                     href="localhost:3001/lists/allPlayers"
                     target="_blank"
                     rel="noopener noreferrer"
-
                 >
                     test get_all_players_as_json_array
                 </a>

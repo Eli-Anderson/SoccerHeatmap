@@ -3,18 +3,10 @@ import {
     Select,
     MenuItem,
     makeStyles,
-    FormControl,
-    InputLabel
+    InputLabel,
+    FormControl
 } from "@material-ui/core";
 import { AppContext } from "./App";
-
-const dummyFetch = () => {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve(["Penalties", "Goals", "Goal Attempts"]);
-        }, Math.random() * 3000);
-    });
-};
 
 // define our styles here. this transforms css styles to a class so it is easier to apply
 const useStyles = makeStyles({
@@ -26,43 +18,37 @@ const useStyles = makeStyles({
     }
 });
 
-export const EventSelect = props => {
+export const MatchSelect = props => {
+    const { team, match, setMatch } = useContext(AppContext);
     const classes = useStyles(props);
 
-    const { event, setEvent } = useContext(AppContext);
-
-    const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
-
-    // this will run only on the initial render
-    useEffect(() => {
-        // fetch data here
-        // setLoading(true);
-        // fetch("http://localhost:3001/lists/allEventTypes")
-        //     .then(response => response.json())
-        //     .then(setData)
-        //     .then(() => setLoading(false));
-    }, []);
 
     return (
         <div>
             <FormControl>
-                <InputLabel htmlFor="eventSelect">Event</InputLabel>
+                {/* if a team is selected, show 'Match', otherwise show 'Select a team' */}
+                <InputLabel htmlFor="matchSelect">
+                    {team ? "Match" : "Select a team"}
+                </InputLabel>
                 <Select
-                    id="eventSelect"
+                    id="matchSelect"
+                    disabled={!team}
                     className={classes.select}
-                    value={event}
-                    onChange={ev => setEvent(ev.target.value)}
+                    value={match}
+                    onChange={ev => setMatch(ev.target.value)}
                 >
                     <MenuItem className={classes.firstItem} key="all" value="">
                         All
                     </MenuItem>
+                    {/* if loading, show an item to display this */}
                     {loading ? (
                         <MenuItem disabled key="loading">
                             Loading...
                         </MenuItem>
                     ) : (
-                        props.eventTypes.map(x => (
+                        // otherwise just display the match names
+                        props.matches.map(x => (
                             <MenuItem key={x} value={x}>
                                 {x}
                             </MenuItem>

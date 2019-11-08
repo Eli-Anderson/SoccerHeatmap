@@ -1,8 +1,10 @@
 import json
 from db_factory import DB_Factory
 from flask import Flask
+from flask_cors import CORS
 db = DB_Factory()
 app = Flask(__name__)
+CORS(app)
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 This is the API for the communication between the back-end and the front-end.
@@ -36,7 +38,7 @@ def allTeams():
 :param team_name: The name of the team as a string.
 :returns: Result as JSON.
 """
-@app.route("/search/teamsMatches")
+@app.route("/search/teamsMatches/<team_name>")
 def teamMatches(team_name):
     dummy = db.search_home_teams_matches(team_name)
     result = json.dumps(dummy)
@@ -66,7 +68,7 @@ def allMatches():
 :param date: Date of the match.
 :returns: Result as JSON.
 """
-@app.route("/search/Match")
+@app.route("/search/Match/<home_team>/<away_team>/<date>")
 def match(home_team, away_team, date):
     dummy = db.match_details(home_team, away_team, date)
     result = json.dumps(dummy)
@@ -78,7 +80,7 @@ def match(home_team, away_team, date):
 :param player_name: Name of the player.
 :returns: Result as JSON.
 """
-@app.route("#TODO")
+@app.route("/todo")
 def player_heatmap_fouls(player_name):
     dummy = db.player_heatmap(player_name)
     result = json.dumps(dummy)
