@@ -1,12 +1,5 @@
-import React, { useContext } from "react";
-import {
-    Select,
-    MenuItem,
-    makeStyles,
-    InputLabel,
-    FormControl
-} from "@material-ui/core";
-import { AppContext } from "./App";
+import React from "react";
+import { makeStyles, InputLabel, FormControl } from "@material-ui/core";
 
 // define our styles here. this transforms css styles to a class so it is easier to apply
 const useStyles = makeStyles({
@@ -19,7 +12,6 @@ const useStyles = makeStyles({
 });
 
 export const PlayerSelect = props => {
-    const { team, player, setPlayer } = useContext(AppContext);
     const classes = useStyles(props);
 
     return (
@@ -27,29 +19,21 @@ export const PlayerSelect = props => {
             <FormControl>
                 {/* if a team is selected, show 'Player', otherwise show 'Select a team' */}
                 <InputLabel htmlFor="playerSelect">Player</InputLabel>
-                <Select
+                <select
                     id="playerSelect"
                     className={classes.select}
-                    value={player}
-                    onChange={ev => setPlayer(ev.target.value)}
+                    value={props.value}
+                    onChange={props.onChange}
                 >
-                    <MenuItem className={classes.firstItem} key="all" value="">
-                        All
-                    </MenuItem>
-                    {/* if loading, show an item to display this */}
-                    {props.loading ? (
-                        <MenuItem disabled key="loading">
-                            Loading...
-                        </MenuItem>
-                    ) : (
-                        // otherwise just display the player names
-                        props.players.slice(0, 60).map((x, i) => (
-                            <MenuItem key={i} value={x}>
-                                {x}
-                            </MenuItem>
-                        ))
-                    )}
-                </Select>
+                    <option className={classes.firstItem} key="all" value="">
+                        {props.data.length ? "All" : "Loading..."}
+                    </option>
+                    {props.data.map((x, i) => (
+                        <option key={x + i} value={x}>
+                            {x}
+                        </option>
+                    ))}
+                </select>
             </FormControl>
         </div>
     );

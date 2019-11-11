@@ -1,11 +1,8 @@
-import React, { useContext, useRef, useEffect } from "react";
-import { AppContext } from "./App";
+import React, { useRef, useEffect } from "react";
 import h337 from "heatmap.js";
 import { LinearProgress, Fade } from "@material-ui/core";
 
 export const Heatmap = props => {
-    const { data } = useContext(AppContext);
-
     const containerRef = useRef();
 
     // data stores the filtered data: the data we want to visualize
@@ -17,45 +14,48 @@ export const Heatmap = props => {
     // so we may need to import a library for this, or just come up with our own
     // function
 
-    const heatmap = useRef();
+    const heatmapRef = useRef(null);
 
     useEffect(() => {
-        heatmap.current = h337.create({
+        heatmapRef.current = h337.create({
             container: containerRef.current
         });
     }, []);
 
     useEffect(() => {
-        if (data && data.length) {
+        const container = containerRef.current;
+        const heatmap = heatmapRef.current;
+        if (props.data && props.data.length && container && heatmap) {
             const scale = {
-                x: containerRef.current.clientWidth / 45,
-                y: containerRef.current.clientHeight / 69
+                x: container.clientWidth / 45,
+                y: container.clientHeight / 69
             };
             console.log(
-                data.map(point => ({
+                props.data.map(point => ({
                     x: Math.round(point.x * scale.x),
                     y: Math.round(point.y * scale.y),
                     value: point.value
                 }))
             );
-            heatmap.current.setData({
+            heatmap.setData({
                 max: 2,
-                data: data.map(point => ({
+                data: props.data.map(point => ({
                     x: point.x * scale.x,
                     y: point.y * scale.y,
                     value: point.value
                 }))
             });
         } else {
-            heatmap.current.setData({
+            heatmap.setData({
                 max: 100,
                 data: []
             });
         }
-    }, [data]);
+    }, [props.data]);
 
     return (
         <div>
+            {/* Progress bar disabled for now */}
             <Fade in={false}>
                 <LinearProgress style={{ height: 6 }} variant="query" />
             </Fade>

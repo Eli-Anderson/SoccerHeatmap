@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React from "react";
 import {
     Select,
     MenuItem,
@@ -6,7 +6,6 @@ import {
     FormControl,
     InputLabel
 } from "@material-ui/core";
-import { AppContext } from "./App";
 
 // define our styles here. this transforms css styles to a class so it is easier to apply
 const useStyles = makeStyles({
@@ -21,21 +20,6 @@ const useStyles = makeStyles({
 export const TeamSelect = props => {
     const classes = useStyles(props);
 
-    const { team, setTeam } = useContext(AppContext);
-    const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(false);
-
-    // this will run only on the initial render
-    useEffect(() => {
-        // fetch data here
-        // setLoading(true);
-        // fetch("http://localhost:3001/lists/allTeams")
-        //     .then(data => data.json())
-        //     .then(setData)
-        //     .then(() => setLoading(false));
-    }, []);
-
-    // if we are currently fetching data, return some kind of loading element
     return (
         <div>
             <FormControl>
@@ -43,23 +27,17 @@ export const TeamSelect = props => {
                 <Select
                     id="teamSelect"
                     className={classes.select}
-                    value={team}
-                    onChange={ev => setTeam(ev.target.value)}
+                    value={props.value}
+                    onChange={props.onChange}
                 >
                     <MenuItem className={classes.firstItem} key="all" value="">
-                        All
+                        {props.data.length ? "All" : "Loading..."}
                     </MenuItem>
-                    {loading ? (
-                        <MenuItem disabled key="loading...">
-                            Loading...
+                    {props.data.map(x => (
+                        <MenuItem key={x} value={x}>
+                            {x}
                         </MenuItem>
-                    ) : (
-                        props.teams.map(x => (
-                            <MenuItem key={x} value={x}>
-                                {x}
-                            </MenuItem>
-                        ))
-                    )}
+                    ))}
                 </Select>
             </FormControl>
         </div>

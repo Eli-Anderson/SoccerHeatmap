@@ -1,12 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
-import {
-    Select,
-    MenuItem,
-    makeStyles,
-    InputLabel,
-    FormControl
-} from "@material-ui/core";
-import { AppContext } from "./App";
+import React from "react";
+import { makeStyles, InputLabel, FormControl } from "@material-ui/core";
 
 // define our styles here. this transforms css styles to a class so it is easier to apply
 const useStyles = makeStyles({
@@ -19,42 +12,31 @@ const useStyles = makeStyles({
 });
 
 export const MatchSelect = props => {
-    const { team, match, setMatch } = useContext(AppContext);
     const classes = useStyles(props);
-
-    const [loading, setLoading] = useState(false);
 
     return (
         <div>
             <FormControl>
                 {/* if a team is selected, show 'Match', otherwise show 'Select a team' */}
                 <InputLabel htmlFor="matchSelect">
-                    {team ? "Match" : "Select a team"}
+                    {props.team ? "Match" : "Select a team"}
                 </InputLabel>
-                <Select
+                <select
                     id="matchSelect"
-                    disabled={!team}
+                    disabled={!props.team}
                     className={classes.select}
-                    value={match}
-                    onChange={ev => setMatch(ev.target.value)}
+                    value={props.value}
+                    onChange={props.onChange}
                 >
-                    <MenuItem className={classes.firstItem} key="all" value="">
+                    <option className={classes.firstItem} key="all" value="">
                         All
-                    </MenuItem>
-                    {/* if loading, show an item to display this */}
-                    {loading ? (
-                        <MenuItem disabled key="loading">
-                            Loading...
-                        </MenuItem>
-                    ) : (
-                        // otherwise just display the match names
-                        props.matches.map(x => (
-                            <MenuItem key={x} value={x}>
-                                {x}
-                            </MenuItem>
-                        ))
-                    )}
-                </Select>
+                    </option>
+                    {props.data.map(x => (
+                        <option key={x} value={x}>
+                            {x}
+                        </option>
+                    ))}
+                </select>
             </FormControl>
         </div>
     );
