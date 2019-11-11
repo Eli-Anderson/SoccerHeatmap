@@ -89,5 +89,5 @@ def player_heatmap_fouls(player_name):
 """
 Running service.
 """
-app.run(port=3001, debug = True)
+app.run(port=3001, debug = True, threaded=True)
 db.close()

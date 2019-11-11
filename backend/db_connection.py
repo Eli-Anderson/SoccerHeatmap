@@ -16,7 +16,7 @@ class Connection:
         password = password.replace('\n', '').replace('\r', '')
 
         # connection to the database "myservice" is in the "TNSNAME.ORA"-file in the driver directory
-        self.con = cx_Oracle.connect(username, password, "myservice")
+        self.con = cx_Oracle.connect(username, password, "myservice", threaded=True)
         self.cursor = self.con.cursor()
     
 

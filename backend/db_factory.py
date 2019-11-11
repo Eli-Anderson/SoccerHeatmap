@@ -10,8 +10,9 @@ class DB_Factory:
     def list_all_teams(self):
         # String translation in SQL Query
         statement = 'select distinct long_name from soccer02.team'
-        self.connection.cursor.execute(statement)
-        res_tupel = self.connection.cursor.fetchall()
+        cursor = self.connection.con.cursor()
+        cursor.execute(statement)
+        res_tupel = cursor.fetchall()
         res_string_list = [str(i[0]) for i in res_tupel]
         # pprint(self.connection.cursor.description)
         return res_string_list
@@ -19,8 +20,9 @@ class DB_Factory:
     def search_team(self, team_name):
         search_string = '' + team_name
         statement = 'select long_name, short_name from soccer02.team where upper(long_name) like \'%' + search_string.upper() + '%\''
-        self.connection.cursor.execute(statement)
-        res_tupel = self.connection.cursor.fetchall()
+        cursor = self.connection.con.cursor()
+        cursor.execute(statement)
+        res_tupel = cursor.fetchall()
         print("#### Type: ", type(res_tupel))
         print("#### Result: ", res_tupel)
         print("#### 1. Element of the tuple: ", res_tupel[0][0])
@@ -29,15 +31,17 @@ class DB_Factory:
     # Returns all matchevents as a string-list
     def list_all_events(self):
         statement = 'select distinct event_type, sub_type from soccer02.matchevent'
-        self.connection.cursor.execute(statement)
-        res_tupel = self.connection.cursor.fetchall()
+        cursor = self.connection.con.cursor()
+        cursor.execute(statement)
+        res_tupel = cursor.fetchall()
         res_string_list = [str(i[0]) for i in res_tupel]
         return res_string_list
     
     def list_all_players(self):
         statement = 'select name from soccer02.player'
-        self.connection.cursor.execute(statement)
-        res = self.connection.cursor.fetchall()
+        cursor = self.connection.con.cursor()
+        cursor.execute(statement)
+        res = cursor.fetchall()
         #pprint(res)
         return res
 
@@ -45,8 +49,9 @@ class DB_Factory:
         search_string = '' + event_type
         statement = 'select * from soccer02.matchevent ' \
                     'where upper(event_type) like \'%' + search_string.upper() + '%\''
-        self.connection.cursor.execute(statement)
-        res = self.connection.cursor.fetchall()
+        cursor = self.connection.con.cursor()
+        cursor.execute(statement)
+        res = cursor.fetchall()
         pprint(res)
         return res
 
@@ -54,8 +59,9 @@ class DB_Factory:
         statement = 'select pos_x, pos_y, event_type, elapsed, "comment" from soccer02.matchevent ' \
                     'where matchevent_id = ' + event_id
         pprint(statement)
-        self.connection.cursor.execute(statement)
-        res = self.connection.cursor.fetchall()
+        cursor = self.connection.con.cursor()
+        cursor.execute(statement)
+        res = cursor.fetchall()
         pprint(res)
         return res
 
@@ -63,12 +69,13 @@ class DB_Factory:
     # Returns all matches as a string-list
     def list_all_matches(self):
         statement = 'select distinct "date", result, home_team_goal, away_team_goal from soccer02.match'
-        self.connection.cursor.execute(statement)
-        res_tupel = self.connection.cursor.fetchall()
+        cursor = self.connection.con.cursor()
+        cursor.execute(statement)
+        res_tupel = cursor.fetchall()
         res_string_list = [str(i[0]) for i in res_tupel]
         pprint(res_tupel)
         pprint(res_string_list)
-        pprint(self.connection.cursor.description)
+        pprint(cursor.description)
         return res_string_list
 
     # TODO
@@ -76,8 +83,9 @@ class DB_Factory:
         statement = 'select player.name, match.result from soccer02.player, soccer02.match ' \
                     'inner join soccer02.match on team.team_id = match.team_awayteam_id ' \
                     'where upper(long_name) like \'%' + home_team_name + '%\''
-        self.connection.cursor.execute(statement)
-        res = self.connection.cursor.fetchall()
+        cursor = self.connection.con.cursor()
+        cursor.execute(statement)
+        res = cursor.fetchall()
         pprint(res)
         return res
 
@@ -86,8 +94,9 @@ class DB_Factory:
         statement = 'select team.long_name, match.result from soccer02.team ' \
                     'inner join soccer02.match on team.team_id = match.team_hometeam_id ' \
                     'where upper(long_name) like \'%' + search_string.upper() + '%\''
-        self.connection.cursor.execute(statement)
-        res = self.connection.cursor.fetchall()
+        cursor = self.connection.con.cursor()
+        cursor.execute(statement)
+        res = cursor.fetchall()
         pprint(res)
         return res
 
@@ -96,8 +105,9 @@ class DB_Factory:
         statement = 'select team.long_name, match.result from soccer02.team ' \
                     'inner join soccer02.match on team.team_id = match.team_awayteam_id ' \
                     'where upper(long_name) like \'%' + search_string.upper() + '%\''
-        self.connection.cursor.execute(statement)
-        res = self.connection.cursor.fetchall()
+        cursor = self.connection.con.cursor()
+        cursor.execute(statement)
+        res = cursor.fetchall()
         pprint(res)
         return res
     
@@ -108,8 +118,9 @@ class DB_Factory:
                     'from soccer02.player ' \
                     'join soccer02.matchevent on soccer02.player.player_id = soccer02.matchevent.player_player_id ' \
                     'where upper(soccer02.player.name) like \'%' + search_string.upper() + '%\'and event_type like \'foulcommit\''
-        self.connection.cursor.execute(statement)
-        res = self.connection.cursor.fetchall()
+        cursor = self.connection.con.cursor()
+        cursor.execute(statement)
+        res = cursor.fetchall()
         pprint(res)
         return res
 
