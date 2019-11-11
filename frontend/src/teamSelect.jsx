@@ -1,7 +1,6 @@
 import React from "react";
 import {
-    Select,
-    MenuItem,
+    NativeSelect,
     makeStyles,
     FormControl,
     InputLabel
@@ -24,21 +23,25 @@ export const TeamSelect = props => {
         <div>
             <FormControl>
                 <InputLabel htmlFor="teamSelect">Team</InputLabel>
-                <Select
+                <NativeSelect
                     id="teamSelect"
                     className={classes.select}
                     value={props.value}
                     onChange={props.onChange}
                 >
-                    <MenuItem className={classes.firstItem} key="all" value="">
-                        {props.data.length ? "All" : "Loading..."}
-                    </MenuItem>
+                    <option
+                        className={classes.firstItem}
+                        key="all"
+                        value="none"
+                    >
+                        {props.data.length ? "" : "Loading..."}
+                    </option>
                     {props.data.map(x => (
-                        <MenuItem key={x} value={x}>
+                        <option key={x} value={x}>
                             {x}
-                        </MenuItem>
+                        </option>
                     ))}
-                </Select>
+                </NativeSelect>
             </FormControl>
         </div>
     );

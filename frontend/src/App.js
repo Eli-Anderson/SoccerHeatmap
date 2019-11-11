@@ -28,10 +28,10 @@ const removeDuplicates = arr => {
 
 function App(props) {
     const classes = useStyles(props);
-    const [event, setEvent] = useState("");
-    const [team, setTeam] = useState("");
-    const [player, setPlayer] = useState("");
-    const [match, setMatch] = useState("");
+    const [event, setEvent] = useState("none");
+    const [team, setTeam] = useState("none");
+    const [player, setPlayer] = useState("none");
+    const [match, setMatch] = useState("none");
     const [data, setData] = useState([]);
 
     const [loading, setLoading] = useState(false);
@@ -68,16 +68,17 @@ function App(props) {
             .then(response => response.json())
             .then(d => d.sort()) // sort alphabetically
             .then(setPlayers)
-            .catch(error => console.error(error))
-            .finally(() => setLoading(false));
+            .catch(error => console.error(error));
     }, []);
 
     useEffect(() => {
-        if (player && event === "foulcommit") {
+        if (player && player !== "none" && event === "foulcommit") {
+            setLoading(true);
             fetch("http://localhost:3001/fouls/" + player)
                 .then(response => response.json())
                 .then(json => json.map(p => ({ x: p[0], y: p[1], value: 1 })))
-                .then(setData);
+                .then(setData)
+                .then(() => setLoading(false));
         } else {
             setData([]);
         }
@@ -87,67 +88,55 @@ function App(props) {
         <div className={"App " + classes.app}>
             <h3>Soccer Analyzer</h3>
             {/* Grid helps us manage the layout of elements */}
-            {loading ? (
-                <p>Loading...</p>
-            ) : (
-                <div>
-                    <Grid
-                        id="filterToolbar"
-                        container
-                        direction="column"
-                        justify="center"
-                        alignItems="center"
-                    >
-                        <Grid item>
-                            <Grid container spacing={5} direction="row">
-                                <Grid item>
-                                    <EventSelect
-                                        value={event}
-                                        onChange={ev =>
-                                            setEvent(ev.target.value)
-                                        }
-                                        data={eventTypes}
-                                    />
-                                </Grid>
-                                <Grid item>
-                                    <PlayerSelect
-                                        value={player}
-                                        onChange={ev =>
-                                            setPlayer(ev.target.value)
-                                        }
-                                        data={players}
-                                    />
-                                </Grid>
-                                <Grid item>
-                                    <TeamSelect
-                                        value={team}
-                                        onChange={ev =>
-                                            setTeam(ev.target.value)
-                                        }
-                                        data={teams}
-                                    />
-                                </Grid>
-                                <Grid item>
-                                    <MatchSelect
-                                        value={match}
-                                        onChange={ev =>
-                                            setMatch(ev.target.value)
-                                        }
-                                        team={team}
-                                        data={matches}
-                                    />
-                                </Grid>
+            <div>
+                <Grid
+                    id="filterToolbar"
+                    container
+                    direction="column"
+                    justify="center"
+                    alignItems="center"
+                >
+                    <Grid item>
+                        <Grid container spacing={5} direction="row">
+                            <Grid item>
+                                <EventSelect
+                                    value={event}
+                                    onChange={ev => setEvent(ev.target.value)}
+                                    data={eventTypes}
+                                />
+                            </Grid>
+                            <Grid item>
+                                <PlayerSelect
+                                    value={player}
+                                    onChange={ev => setPlayer(ev.target.value)}
+                                    data={players}
+                                />
+                            </Grid>
+                            <Grid item>
+                                <TeamSelect
+                                    value={team}
+                                    onChange={ev => setTeam(ev.target.value)}
+                                    data={teams}
+                                />
+                            </Grid>
+                            <Grid item>
+                                <MatchSelect
+                                    value={match}
+                                    onChange={ev => setMatch(ev.target.value)}
+                                    team={team}
+                                    data={matches}
+                                />
                             </Grid>
                         </Grid>
                     </Grid>
+                </Grid>
 
-                    <Grid container className={classes.content}>
-                        <Grid item>
-                            <Heatmap data={data} />
-                        </Grid>
+                <Grid container className={classes.content}>
+                    <Grid item>
+                        <Heatmap data={data} loading={loading} />
                     </Grid>
-                </div>
-            )}
+                </Grid>
+            </div>
         </div>
     );
 }

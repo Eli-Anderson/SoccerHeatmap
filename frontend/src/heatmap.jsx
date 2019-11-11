@@ -55,8 +55,7 @@ export const Heatmap = props => {
 
     return (
         <div>
-            {/* Progress bar disabled for now */}
-            <Fade in={false}>
+            <Fade in={props.loading}>
                 <LinearProgress style={{ height: 6 }} variant="query" />
             </Fade>
             <div ref={containerRef}>

@@ -1,5 +1,10 @@
 import React from "react";
-import { makeStyles, InputLabel, FormControl } from "@material-ui/core";
+import {
+    makeStyles,
+    InputLabel,
+    FormControl,
+    NativeSelect
+} from "@material-ui/core";
 
 // define our styles here. this transforms css styles to a class so it is easier to apply
 const useStyles = makeStyles({
@@ -21,22 +26,26 @@ export const MatchSelect = props => {
                 <InputLabel htmlFor="matchSelect">
                     {props.team ? "Match" : "Select a team"}
                 </InputLabel>
-                <select
+                <NativeSelect
                     id="matchSelect"
                     disabled={!props.team}
                     className={classes.select}
                     value={props.value}
                     onChange={props.onChange}
                 >
-                    <option className={classes.firstItem} key="all" value="">
-                        All
+                    <option
+                        className={classes.firstItem}
+                        key="all"
+                        value="none"
+                    >
+                        {props.data.length ? "" : "loading..."}
                     </option>
                     {props.data.map(x => (
                         <option key={x} value={x}>
                             {x}
                         </option>
                     ))}
-                </select>
+                </NativeSelect>
             </FormControl>
         </div>
     );
