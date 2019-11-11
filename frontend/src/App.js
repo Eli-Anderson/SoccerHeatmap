@@ -20,8 +20,7 @@ const AppContext = React.createContext({
     setPlayer: null,
     match: null,
     setMatch: null,
-    data: null,
-    dataLoading: false
+    data: null
 });
 
 // define our styles here. this transforms css styles to a class so it is easier to apply
@@ -49,11 +48,12 @@ function App(props) {
     const [player, setPlayer] = useState("");
     const [match, setMatch] = useState("");
     const [data, setData] = useState([]);
-    const [dataLoading, setDataLoading] = useState(false);
 
+    const [loading, setLoading] = useState(false);
     const [eventTypes, setEventTypes] = useState([]);
     const [teams, setTeams] = useState([]);
     const [matches, setMatches] = useState([]);
+    const [players, setPlayers] = useState([]);
 
     useEffect(() => {
         /*
@@ -63,6 +63,7 @@ function App(props) {
 
             The general format is fetch then return the json in the response then update our data
         */
+        setLoading(true);
         fetch("http://localhost:3001/lists/allTeams")
             .then(response => response.json())
             .then(setTeams)
@@ -76,16 +77,22 @@ function App(props) {
             .then(() => fetch("http://localhost:3001/lists/allMatches"))
             .then(response => response.json())
             .then(setMatches)
-            .catch(error => console.error(error));
+            // get the list of all Players
+            .then(() => fetch("http://localhost:3001/lists/allPlayers"))
+            .then(response => response.json())
+            .then(setPlayers)
+            .catch(error => console.error(error))
+            .finally(() => setLoading(false));
     }, []);
 
     useEffect(() => {
-        // if (team) {
-        //     fetch("http://localhost:3001/search/teamsMatches/" + team)
-        //         .then(response => response.json())
-        //         .then(setMatches);
-        // }
-    }, [team]);
+        if (player) {
+            fetch("http://localhost:3001/fouls/" + player)
+                .then(response => response.json())
+                .then(json => json.map(p => ({ x: p[0], y: p[1], value: 1 })))
+                .then(setData);
+        }
+    }, [player]);
 
     return (
         <div className={"App " + classes.app}>
@@ -100,50 +107,50 @@ function App(props) {
                     setPlayer,
                     match,
                     setMatch,
-                    data,
-                    dataLoading
+                    data
                 }}
             >
                 <h3>Soccer Analyzer</h3>
                 {/* Grid helps us manage the layout of elements */}
-
-                <Grid
-                    id="filterToolbar"
-                    container
-                    direction="column"
-                    justify="center"
-                    alignItems="center"
-                >
-                    <Grid item>
-                        <Grid container spacing={5} direction="row">
+                {loading ? (
+                    <p>Loading...</p>
+                ) : (
+                    <div>
+                        <Grid
+                            id="filterToolbar"
+                            container
+                            direction="column"
+                            justify="center"
+                            alignItems="center"
+                        >
                             <Grid item>
-                                <EventSelect eventTypes={eventTypes} />
-                            </Grid>
-                            <Grid item>
-                                <TeamSelect teams={teams} />
-                            </Grid>
-                            <Grid item>
-                                <MatchSelect matches={matches} />
+                                <Grid container spacing={5} direction="row">
+                                    <Grid item>
+                                        <PlayerSelect
+                                            loading={loading}
+                                            players={players}
+                                        />
+                                    </Grid>
+                                    <Grid item>
+                                        <EventSelect eventTypes={eventTypes} />
+                                    </Grid>
+                                    <Grid item>
+                                        <TeamSelect teams={teams} />
+                                    </Grid>
+                                    <Grid item>
+                                        <MatchSelect matches={matches} />
+                                    </Grid>
+                                </Grid>
                             </Grid>
                         </Grid>
-                    </Grid>
-                </Grid>
 
-                {/* Content body */}
-
-                <Grid container className={classes.content}>
-                    <Grid item>
-                        <Heatmap />
-                    </Grid>
-                </Grid>
-                <a
-                    className="App-link"
-                    href="localhost:3001/lists/allPlayers"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    test get_all_players_as_json_array
-                </a>
+                        <Grid container className={classes.content}>
+                            <Grid item>
+                                <Heatmap />
+                            </Grid>
+                        </Grid>
+                    </div>
+                )}
             </AppContext.Provider>
         </div>
     );

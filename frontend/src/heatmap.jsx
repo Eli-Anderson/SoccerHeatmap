@@ -4,7 +4,7 @@ import h337 from "heatmap.js";
 import { LinearProgress, Fade } from "@material-ui/core";
 
 export const Heatmap = props => {
-    const { data, dataLoading } = useContext(AppContext);
+    const { data } = useContext(AppContext);
 
     const containerRef = useRef();
 
@@ -27,31 +27,24 @@ export const Heatmap = props => {
 
     useEffect(() => {
         if (data && data.length) {
-            // test heatmap with random data
-            let randomData = [];
-            const n = 25 + Math.random() * 50;
-            for (let i = 0; i < n; i++) {
-                randomData.push({
-                    x: Math.round(
-                        Math.random() * containerRef.current.offsetWidth
-                    ),
-                    y: Math.round(
-                        Math.random() * containerRef.current.offsetHeight
-                    ),
-                    value: Math.round(Math.random() * 100)
-                });
-            }
-
-            /* replace randomData with the real data when the time comes
-             * the data is expected to be in the form:
-             * [
-             *   { x: int, y: int, value: int },
-             *   ...
-             * ]
-             */
+            const scale = {
+                x: containerRef.current.clientWidth / 45,
+                y: containerRef.current.clientHeight / 69
+            };
+            console.log(
+                data.map(point => ({
+                    x: Math.round(point.x * scale.x),
+                    y: Math.round(point.y * scale.y),
+                    value: point.value
+                }))
+            );
             heatmap.current.setData({
-                max: 100,
-                data: randomData
+                max: 2,
+                data: data.map(point => ({
+                    x: point.x * scale.x,
+                    y: point.y * scale.y,
+                    value: point.value
+                }))
             });
         } else {
             heatmap.current.setData({
@@ -63,11 +56,11 @@ export const Heatmap = props => {
 
     return (
         <div>
-            <Fade in={dataLoading}>
+            <Fade in={false}>
                 <LinearProgress style={{ height: 6 }} variant="query" />
             </Fade>
             <div ref={containerRef}>
-                <img src="field.svg" />
+                <img src="field.svg" alt="" />
             </div>
         </div>
     );
