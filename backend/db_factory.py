@@ -107,7 +107,7 @@ class DB_Factory:
         statement = 'select pos_x, pos_y ' \
                     'from soccer02.player ' \
                     'join soccer02.matchevent on soccer02.player.player_id = soccer02.matchevent.player_player_id ' \
-                    'where upeer(soccer02.player.name) like \'%' + search_string.upper() + '%\'and event_type like \'foulcommit\''
+                    'where upper(soccer02.player.name) like \'%' + search_string.upper() + '%\'and event_type like \'foulcommit\''
         self.connection.cursor.execute(statement)
         res = self.connection.cursor.fetchall()
         pprint(res)
