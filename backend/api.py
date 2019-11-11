@@ -80,9 +80,9 @@ def match(home_team, away_team, date):
 :param player_name: Name of the player.
 :returns: Result as JSON.
 """
-@app.route("/todo")
+@app.route("/fouls/<player_name>")
 def player_heatmap_fouls(player_name):
-    dummy = db.player_heatmap(player_name)
+    dummy = db.player_heatmap_fouls(player_name)
     result = json.dumps(dummy)
     return result
 
