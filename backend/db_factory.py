@@ -107,6 +107,8 @@ class DB_Factory:
         statement = 'select team.long_name, match.result from soccer02.team ' \
                     'inner join soccer02.match on team.team_id = match.team_awayteam_id ' \
                     'where upper(long_name) like \'%' + search_string.upper() + '%\' ' \
+		    'and long_name is not null and result is not null and team_id is not null ' \
+		    'and team_awayteam_id is not null;'
         self.connection.cursor.execute(statement)
         res = self.connection.cursor.fetchall()
         pprint(res)
@@ -118,7 +120,9 @@ class DB_Factory:
         statement = 'select pos_x, pos_y ' \
                     'from soccer02.player ' \
                     'join soccer02.matchevent on soccer02.player.player_id = soccer02.matchevent.player_player_id ' \
-                    'where upeer(soccer02.player.name) like \'%' + search_string.upper() + '%\'and event_type like \'foulcommit\''
+                    'where upeer(soccer02.player.name) like \'%' + search_string.upper() + '%\'and event_type like \'foulcommit\' ' \
+		    'and pos_x is not null and pos_y is not null and player.name is not null and player_id is not null ' \
+		    'and player_player_id is not null;'
         self.connection.cursor.execute(statement)
         res = self.connection.cursor.fetchall()
         pprint(res)
