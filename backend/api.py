@@ -56,6 +56,7 @@ def teamMatches(team_name):
 def allPlayers():
     dummy = db.list_all_players()
     result = json.dumps(dummy)
+    print(result)
     return result
 
 """ Returns all matches.

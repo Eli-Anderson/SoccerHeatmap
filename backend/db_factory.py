@@ -4,10 +4,10 @@ from pprint import pprint
 class DB_Factory:
     
     # This is a classvariable meaning all instances access to the same connection
-    connection = Connection()
 
     # Returns all teams as a string-list by converting the query-tupel-results in a list of strings
     def list_all_teams(self):
+        con = Connection()
         # String translation in SQL Query
         statement = 'select distinct long_name from soccer02.team'
         self.cursor = self.connection.con.cursor()

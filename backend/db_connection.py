@@ -8,6 +8,7 @@ class Connection:
     def __init__(self):
         # configuration file path.
         config_file = open(os.path.join(sys.path[0], "db_config.conf"), 'r')
+        
 
         # read username and password
         username = config_file.readline()
