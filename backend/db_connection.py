@@ -17,10 +17,10 @@ class Connection:
 
         # connection to the database "myservice" is in the "TNSNAME.ORA"-file in the driver directory
         self.con = cx_Oracle.connect(username, password, "myservice", threaded=True)
-        self.cursor = self.con.cursor()
+        
     
 
     def close(self):
         # close cursor and connection
-        self.cursor.close()
+        
         self.con.close()

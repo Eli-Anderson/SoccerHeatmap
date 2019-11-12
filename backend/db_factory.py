@@ -2,7 +2,7 @@ from db_connection import Connection
 from pprint import pprint
 
 class DB_Factory:
-
+    
     # This is a classvariable meaning all instances access to the same connection
     connection = Connection()
 
@@ -10,9 +10,9 @@ class DB_Factory:
     def list_all_teams(self):
         # String translation in SQL Query
         statement = 'select distinct long_name from soccer02.team'
-        cursor = self.connection.con.cursor()
-        cursor.execute(statement)
-        res_tupel = cursor.fetchall()
+        self.cursor = self.connection.con.cursor()
+        self.cursor.execute(statement)
+        res_tupel = self.cursor.fetchall()
         res_string_list = [str(i[0]) for i in res_tupel]
         # pprint(self.connection.cursor.description)
         return res_string_list
@@ -21,8 +21,9 @@ class DB_Factory:
         search_string = '' + team_name
         statement = 'select long_name, short_name from soccer02.team where upper(long_name) like \'%' + search_string.upper() + '%\' ' \
 		    'and long_name is not null and short_name is not null;'
-        self.connection.cursor.execute(statement)
-        res_tupel = self.connection.cursor.fetchall()
+        self.cursor = self.connection.con.cursor()
+        self.cursor.execute(statement)
+        res_tupel = self.cursor.fetchall()
         print("#### Type: ", type(res_tupel))
         print("#### Result: ", res_tupel)
         print("#### 1. Element of the tuple: ", res_tupel[0][0])
@@ -31,15 +32,17 @@ class DB_Factory:
     # Returns all matchevents as a string-list
     def list_all_events(self):
         statement = 'select distinct event_type from soccer02.matchevent where event_type is not null'
-        self.connection.cursor.execute(statement)
-        res_tupel = self.connection.cursor.fetchall()
+        self.cursor = self.connection.con.cursor()
+        self.cursor.execute(statement)
+        res_tupel = self.cursor.fetchall()
         res_string_list = [str(i[0]) for i in res_tupel]
         return res_string_list
 
     def list_all_players(self):
         statement = 'select name from soccer02.player where name is not null and rownum <= 50'
-        self.connection.cursor.execute(statement)
-        res = self.connection.cursor.fetchall()
+        self.cursor = self.connection.con.cursor()
+        self.cursor.execute(statement)
+        res = self.cursor.fetchall()
         #pprint(res)
         return res
 
@@ -48,8 +51,9 @@ class DB_Factory:
         statement = 'select distinct * from soccer02.matchevent ' \
                     'where upper(event_type) like \'%' + search_string.upper() + '%\' ' \
 		    'and pos_x is not null and pos_y is not null;'
-        self.connection.cursor.execute(statement)
-        res = self.connection.cursor.fetchall()
+        self.cursor = self.connection.con.cursor()
+        self.cursor.execute(statement)
+        res = self.cursor.fetchall()
         pprint(res)
         return res
 
@@ -59,9 +63,9 @@ class DB_Factory:
                     'and pos_x is not null and pos_y is not null and event_type is not null ' \
                     'and elapsed is not null and "comment" is not null;'
         pprint(statement)
-        cursor = self.connection.con.cursor()
-        cursor.execute(statement)
-        res = cursor.fetchall()
+        self.cursor = self.connection.con.cursor()
+        self.cursor.execute(statement)
+        res = self.cursor.fetchall()
         pprint(res)
         return res
 
@@ -71,8 +75,9 @@ class DB_Factory:
         statement = 'select distinct "date", result, home_team_goal, away_team_goal from soccer02.match ' \
 		    'where "date" is not null and result is not null and home_team_goal is not null ' \
 		    'and away_team_goal is not null;'
-        self.connection.cursor.execute(statement)
-        res_tupel = self.connection.cursor.fetchall()
+        self.cursor = self.connection.con.cursor()
+        self.cursor.execute(statement)
+        res_tupel = self.cursor.fetchall()
         res_string_list = [str(i[0]) for i in res_tupel]
         #pprint(res_tupel)
         #pprint(res_string_list)
@@ -86,9 +91,10 @@ class DB_Factory:
                     'where upper(long_name) like \'%' + home_team_name + '%\' ' \
 		    'and player.name is not null and match.result is not null and team.team_id is not null ' \
 		    'and match.team_awayteam_id is not null;'
-        self.connection.cursor.execute(statement)
-        res = self.connection.cursor.fetchall()
-        pprint(res)
+        self.cursor = self.connection.con.cursor()
+        self.cursor.execute(statement)
+        res = self.cursor.fetchall()
+        #pprint(res)
         return res
 
     def search_home_teams_matches(self, team_name):
@@ -98,8 +104,9 @@ class DB_Factory:
                     'where upper(long_name) like \'%' + search_string.upper() + '%\' ' \
 		    'and team.long_name is not null and match.result is not null and team_id is not null ' \
 		    'and team_hometeam_id is not null;'
-        self.connection.cursor.execute(statement)
-        res = self.connection.cursor.fetchall()
+        self.cursor = self.connection.con.cursor()
+        self.cursor.execute(statement)
+        res = self.cursor.fetchall()
         pprint(res)
         return res
 
@@ -110,8 +117,9 @@ class DB_Factory:
                     'where upper(long_name) like \'%' + search_string.upper() + '%\' ' \
 		    'and long_name is not null and result is not null and team_id is not null ' \
 		    'and team_awayteam_id is not null;'
-        self.connection.cursor.execute(statement)
-        res = self.connection.cursor.fetchall()
+        self.cursor = self.connection.con.cursor()
+        self.cursor.execute(statement)
+        res = self.cursor.fetchall()
         pprint(res)
         return res
     
@@ -124,8 +132,9 @@ class DB_Factory:
                     'where upeer(soccer02.player.name) like \'%' + search_string.upper() + '%\'and event_type like \'foulcommit\' ' \
 		    'and pos_x is not null and pos_y is not null and player.name is not null and player_id is not null ' \
 		    'and player_player_id is not null;'
-        self.connection.cursor.execute(statement)
-        res = self.connection.cursor.fetchall()
+        self.cursor = self.connection.con.cursor()
+        self.cursor.execute(statement)
+        res = self.cursor.fetchall()
         pprint(res)
         return res
 
