@@ -22,7 +22,7 @@ Here are all the functions defined which are to be used.
 :returns: Result as JSON.
 """
 @app.route("/lists/allEventTypes")
-@cache.cached(timeout=50, key_prefix='all_comments')
+@cache.cached(timeout=500, key_prefix='all_comments')
 def allEventTypes():
     dummy = db.list_all_events()
     result = json.dumps(dummy)
@@ -32,7 +32,7 @@ def allEventTypes():
 :returns: Result as JSON.
 """
 @app.route("/lists/allTeams")
-@cache.cached(timeout=50, key_prefix='all_comments')
+@cache.cached(timeout=500, key_prefix='all_comments')
 def allTeams():
     dummy = db.list_all_teams()
     result = json.dumps(dummy)
@@ -43,7 +43,7 @@ def allTeams():
 :returns: Result as JSON.
 """
 @app.route("/search/teamsMatches/<team_name>")
-@cache.cached(timeout=50, key_prefix='all_comments')
+@cache.cached(timeout=500, key_prefix='all_comments')
 def teamMatches(team_name):
     dummy = db.search_home_teams_matches(team_name)
     result = json.dumps(dummy)
@@ -53,7 +53,7 @@ def teamMatches(team_name):
 :returns: Result as JSON.
 """
 @app.route("/lists/allPlayers")
-@cache.cached(timeout=50, key_prefix='all_comments')
+@cache.cached(timeout=500, key_prefix='all_comments')
 def allPlayers():
     dummy = db.list_all_players()
     result = json.dumps(dummy)
@@ -63,7 +63,7 @@ def allPlayers():
 :returns: Result as JSON.
 """
 @app.route("/lists/allMatches")
-@cache.cached(timeout=50, key_prefix='all_comments')
+@cache.cached(timeout=500, key_prefix='all_comments')
 def allMatches():
     dummy = db.list_all_matches()
     result = json.dumps(dummy)
@@ -76,7 +76,7 @@ def allMatches():
 :returns: Result as JSON.
 """
 @app.route("/search/Match/<home_team>/<away_team>/<date>")
-@cache.cached(timeout=50, key_prefix='all_comments')
+@cache.cached(timeout=500, key_prefix='all_comments')
 def match(home_team, away_team, date):
     dummy = db.match_details(home_team, away_team, date)
     result = json.dumps(dummy)
@@ -89,7 +89,7 @@ def match(home_team, away_team, date):
 :returns: Result as JSON.
 """
 @app.route("/fouls/<player_name>")
-@cache.cached(timeout=50, key_prefix='all_comments')
+@cache.cached(timeout=500, key_prefix='all_comments')
 def player_heatmap_fouls(player_name):
     dummy = db.player_heatmap_fouls(player_name)
     result = json.dumps(dummy)
