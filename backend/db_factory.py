@@ -30,15 +30,14 @@ class DB_Factory:
 
     # Returns all matchevents as a string-list
     def list_all_events(self):
-        statement = 'select distinct event_type, sub_type from soccer02.matchevent ' \
-		    'and event_type is not null and sub_type is not null;'
+        statement = 'select distinct event_type from soccer02.matchevent where event_type is not null'
         self.connection.cursor.execute(statement)
         res_tupel = self.connection.cursor.fetchall()
         res_string_list = [str(i[0]) for i in res_tupel]
         return res_string_list
 
     def list_all_players(self):
-        statement = 'select name from soccer02.player where name is not null and name like \'%a%\''
+        statement = 'select name from soccer02.player where name is not null and rownum <= 50'
         self.connection.cursor.execute(statement)
         res = self.connection.cursor.fetchall()
         #pprint(res)
