@@ -31,14 +31,14 @@ class DB_Factory:
     # Returns all matchevents as a string-list
     def list_all_events(self):
         statement = 'select distinct event_type, sub_type from soccer02.matchevent ' \
-		    ''and event_type is not null and sub_type is not null;'
+		    'and event_type is not null and sub_type is not null;'
         self.connection.cursor.execute(statement)
         res_tupel = self.connection.cursor.fetchall()
         res_string_list = [str(i[0]) for i in res_tupel]
         return res_string_list
 
     def list_all_players(self):
-        statement = 'select name from soccer02.player where name is not null;'
+        statement = 'select name from soccer02.player where name is not null and name like \'%a%\''
         self.connection.cursor.execute(statement)
         res = self.connection.cursor.fetchall()
         #pprint(res)
@@ -56,8 +56,8 @@ class DB_Factory:
 
     def specific_event(self, event_id):
         statement = 'select pos_x, pos_y, event_type, elapsed, "comment" from soccer02.matchevent ' \
-                    'where matchevent_id = ' + event_id \
-		    'and pos_x is not null and pos_y is not null and event_type is not null ' \
+                    'where matchevent_id = ' + event_id + ' ' \
+                    'and pos_x is not null and pos_y is not null and event_type is not null ' \
                     'and elapsed is not null and "comment" is not null;'
         pprint(statement)
         cursor = self.connection.con.cursor()
@@ -75,9 +75,9 @@ class DB_Factory:
         self.connection.cursor.execute(statement)
         res_tupel = self.connection.cursor.fetchall()
         res_string_list = [str(i[0]) for i in res_tupel]
-        pprint(res_tupel)
-        pprint(res_string_list)
-        pprint(cursor.description)
+        #pprint(res_tupel)
+        #pprint(res_string_list)
+        #pprint(cursor.description)
         return res_string_list
 
     # TODO
