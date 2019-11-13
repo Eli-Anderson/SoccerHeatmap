@@ -2,8 +2,6 @@ from db_connection import Connection
 from pprint import pprint
 
 class DB_Factory:
-    
-    # This is a classvariable meaning all instances access to the same connection
 
     # Returns all teams as a string-list by converting the query-tupel-results in a list of strings
     def list_all_teams(self):
@@ -14,7 +12,6 @@ class DB_Factory:
         res_tupel = con.cur.fetchall()
         res_string_list = [str(i[0]) for i in res_tupel]
         con.close()
-        #pprint(res_string_list)
         return res_string_list
 
     def search_team(self, team_name):
@@ -45,7 +42,6 @@ class DB_Factory:
         statement = 'select name from soccer02.player where name is not null and rownum <= 500'
         con.cur.execute(statement)
         res = con.cur.fetchall()
-        #pprint(res)
         con.close()
         return res
 
@@ -55,10 +51,8 @@ class DB_Factory:
         statement = 'select distinct * from soccer02.matchevent ' \
                     'where upper(event_type) like \'%' + search_string.upper() + '%\' ' \
 		    'and pos_x is not null and pos_y is not null;'
-        #print(statement)
         con.cur.execute(statement)
         res = con.cur.fetchall()
-        #pprint(res)
         return res
 
     def specific_event(self, event_id):
@@ -67,10 +61,8 @@ class DB_Factory:
                     'where matchevent_id = ' + event_id + ' ' \
                     'and pos_x is not null and pos_y is not null and event_type is not null ' \
                     'and elapsed is not null and "comment" is not null;'
-        #print(statement)
         con.cur.execute(statement)
         res = con.cur.fetchall()
-        #pprint(res)
         return res
 
 
@@ -83,18 +75,16 @@ class DB_Factory:
         con.cur.execute(statement)
         res_tupel = con.cur.fetchall()
         res_string_list = [str(i[0]) for i in res_tupel]
-        #pprint(res_tupel)
-        #pprint(res_string_list)
-        #pprint(cursor.description)
         con.close()
         return res_string_list
 
-    # TODO
+    # TODO date-format needs to be like '20081220 00:00:00.000'
+    # SELECT TO_DATE('2012-06-05', 'YYYY-MM-DD') FROM dual;
     def match_details(self, home_team_name, away_team_name, date):
         con = Connection()
         statement = 'select player.name, match.result from soccer02.player, soccer02.match ' \
                     'inner join soccer02.match on team.team_id = match.team_awayteam_id ' \
-                    'where upper(long_name) like \'%' + home_team_name + '%\' ' \
+                    'where upper(long_name) like \'%' + home_team_name + '%\' and date = \'' + date + '\' ' \
 		    'and player.name is not null and match.result is not null and team.team_id is not null ' \
 		    'and match.team_awayteam_id is not null;'
        
