@@ -79,6 +79,19 @@ function App(props) {
         }
     }, [player, event]);
 
+    useEffect(() => {
+        if (player && player !== "none" && event === "goal") {
+            setLoading(true);
+            fetch("http://localhost:3001/goals/" + player)
+                .then(response => response.json())
+                .then(json => json.map(p => ({ x: p[0], y: p[1], value: 1 })))
+                .then(setData)
+                .then(() => setLoading(false));
+        } else {
+            setData([]);
+        }
+    }, [player, event]);
+
     return (
         <div className={"App " + classes.app}>
             <h3>Soccer Analyzer</h3>
