@@ -1,19 +1,46 @@
-import React, { useState, useCallback, useEffect, useRef } from "react";
-import { FormControl, Input, InputLabel, Popover, MenuItem } from "@material-ui/core";
+import React, { useState, useEffect, useRef } from "react";
+import {
+    FormControl,
+    Input,
+    InputLabel,
+    MenuItem,
+    MenuList,
+    Fade
+} from "@material-ui/core";
 import _ from "lodash";
 
-const attemptFetch = _.debounce(value => 
-    fetch("http://localhost:3001/lists/players/" + value);
-, 500);
+import { isFocused, useFocus } from "web-api-hooks";
+
+// const attemptFetch = _.debounce(
+//     value => {
+//         return fetch("http://localhost:3001/search/players/" + value);
+//     },
+//     500,
+//     { trailing: true, leading: false }
+// );
 export const PlayerSearch = props => {
     const [value, setValue] = useState("");
     const [data, setData] = useState([]);
 
+    const [isFocused, bindFocus] = useFocus();
+
     const inputRef = useRef(null);
 
+    const attemptSearch = useRef(
+        _.throttle(
+            search => {
+                fetch("http://localhost:3001/search/players/" + search)
+                    .then(r => r.json())
+                    .then(d => setData(d.map(([x]) => x)));
+            },
+            500,
+            { trailing: true, leading: false }
+        )
+    );
+
     useEffect(() => {
-        if (value) {
-            attemptFetch(value).then(r => r.json()).then(setData)
+        if (value && attemptSearch.current) {
+            attemptSearch.current(value);
         }
     }, [value]);
 
@@ -26,13 +53,25 @@ export const PlayerSearch = props => {
                 onChange={ev => {
                     setValue(ev.target.value);
                 }}
+                {...bindFocus}
             />
-            <Popover
-                open={data.length>0}
-                anchorEl={inputRef}
-            >
-                {data.map((x,i) => <MenuItem key={i}>{x}</MenuItem>)}
-            </Popover>
+            <Fade in={data.length > 0 && isFocused}>
+                <MenuList
+                    style={{
+                        position: "absolute",
+                        zIndex: 9999,
+                        backgroundColor: "white",
+                        top: 60,
+                        maxHeight: 500,
+                        overflow: "scroll",
+                        boxShadow: "0px 0px 20px 2px"
+                    }}
+                >
+                    {data.map((x, i) => (
+                        <MenuItem key={i}>{x}</MenuItem>
+                    ))}
+                </MenuList>
+            </Fade>
         </FormControl>
     );
 };
