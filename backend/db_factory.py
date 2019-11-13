@@ -14,19 +14,6 @@ class DB_Factory:
         con.close()
         return res_string_list
 
-    def search_team(self, team_name):
-        search_string = '' + team_name
-        con = Connection()
-        statement = 'select long_name, short_name from soccer02.team where upper(long_name) like \'%' + search_string.upper() + '%\' ' \
-		    'and long_name is not null and short_name is not null;'
-        con.cur.execute(statement)
-        res_tupel = con.cur.fetchall()
-        print("#### Type: ", type(res_tupel))
-        print("#### Result: ", res_tupel)
-        print("#### 1. Element of the tuple: ", res_tupel[0][0])
-        con.close()
-        return res_tupel
-
     # Returns all matchevents as a string-list
     def list_all_events(self):
         con = Connection()
@@ -87,12 +74,33 @@ class DB_Factory:
                     'where upper(long_name) like \'%' + home_team_name + '%\' and date = \'' + date + '\' ' \
 		    'and player.name is not null and match.result is not null and team.team_id is not null ' \
 		    'and match.team_awayteam_id is not null;'
-       
         con.cur.execute(statement)
         res = con.cur.fetchall()
-        #pprint(res)
         con.close()
         return res
+
+    def search_team(self, team_name):
+        search_string = '' + team_name
+        con = Connection()
+        statement = 'select long_name, short_name from soccer02.team where upper(long_name) like \'%' + search_string.upper() + '%\' ' \
+                    'and long_name is not null and short_name is not null;'
+        con.cur.execute(statement)
+        res_tupel = con.cur.fetchall()
+        print("#### Type: ", type(res_tupel))
+        print("#### Result: ", res_tupel)
+        print("#### 1. Element of the tuple: ", res_tupel[0][0])
+        con.close()
+        return res_tupel
+
+    def search_player(self, player_name):
+        search_string = '' + player_name
+        con = Connection()
+        statement = 'select name from soccer02.player where upper(name) like \'%' + search_string.upper() + '%\' ' \
+		    'and name is not null;'
+        con.cur.execute(statement)
+        res_tupel = con.cur.fetchall()
+        con.close()
+        return res_tupel
 
     def search_home_teams_matches(self, team_name):
         search_string = '' + team_name
@@ -104,7 +112,6 @@ class DB_Factory:
 		    'and team_hometeam_id is not null;'
         con.cur.execute(statement)
         res = con.cur.fetchall()
-        #pprint(res)
         con.close()
         return res
 
@@ -118,10 +125,9 @@ class DB_Factory:
 		    'and team_awayteam_id is not null;'
         con.cur.execute(statement)
         res = con.cur.fetchall()
-        #pprint(res)
         con.close()
         return res
-    
+
     # Heat-map for all attempts on goal of a player from all data
     def player_heatmap_fouls(self, player_name):
         con = Connection()
@@ -132,10 +138,8 @@ class DB_Factory:
                     'where upper(soccer02.player.name) like \'%' + search_string.upper() + '%\'and event_type like \'foulcommit\' ' \
 		    'and pos_x is not null and pos_y is not null and player.name is not null and player_id is not null ' \
 		    'and player_player_id is not null'
-        #print(statement)
         con.cur.execute(statement)
         res = con.cur.fetchall()
-        #pprint(res)
         return res
 
     # corner
@@ -148,10 +152,8 @@ class DB_Factory:
                     'where upeer(soccer02.player.name) like \'%' + search_string.upper() + '%\'and event_type like \'corner\' ' \
                     'and pos_x is not null and pos_y is not null and player.name is not null and player_id is not null ' \
                     'and player_player_id is not null;'
-        #print(statement)
         con.cur.execute(statement)
         res = con.cur.fetchall()
-        #pprint(res)
         return res
 
     # goals
@@ -164,10 +166,8 @@ class DB_Factory:
                     'where upeer(soccer02.player.name) like \'%' + search_string.upper() + '%\'and event_type like \'goal\' ' \
                     'and pos_x is not null and pos_y is not null and player.name is not null and player_id is not null ' \
                     'and player_player_id is not null;'
-        #print(statement)
         con.cur.execute(statement)
         res = con.cur.fetchall()
-        #pprint(res)
         return res
 
     # shoton
@@ -180,10 +180,8 @@ class DB_Factory:
                     'where upeer(soccer02.player.name) like \'%' + search_string.upper() + '%\'and event_type like \'shoton\' ' \
                     'and pos_x is not null and pos_y is not null and player.name is not null and player_id is not null ' \
                     'and player_player_id is not null;'
-        #print(statement)
         con.cur.execute(statement)
         res = con.cur.fetchall()
-        #pprint(res)
         return res
 
     # shot off
@@ -196,10 +194,6 @@ class DB_Factory:
                     'where upeer(soccer02.player.name) like \'%' + search_string.upper() + '%\'and event_type like \'shotoff\' ' \
                     'and pos_x is not null and pos_y is not null and player.name is not null and player_id is not null ' \
                     'and player_player_id is not null;'
-        #print(statement)
         con.cur.execute(statement)
         res = con.cur.fetchall()
-        #pprint(res)
         return res
-
-
