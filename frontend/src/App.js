@@ -41,22 +41,17 @@ function App(props) {
     const [players, setPlayers] = useState([]);
 
     useEffect(() => {
-        /*
-            Since Flask servers only allow a single connection at a time we need to request our
-            data 'synchronously'. We can fetch all the data in this function and just pass it down
-            to the children components (EventSelect, TeamSelect, etc)
-
-            The general format is fetch then return the json in the response then update our data
-        */
         fetch("http://localhost:3001/lists/allTeams")
             .then(response => response.json())
             .then(d => d.sort())
-            .then(setTeams);
+            .then(setTeams)
+            .catch(error => console.error(error));
         // get the list of Event Types
         fetch("http://localhost:3001/lists/allEventTypes")
             .then(response => response.json())
             .then(removeDuplicates)
-            .then(setEventTypes);
+            .then(setEventTypes)
+            .catch(error => console.error(error));
         // get the list of All Matches that we can filter later when a Team is selected
         // currently this does not return the data we need, only the dates of the matches
         // .then(() => fetch("http://localhost:3001/lists/allMatches"))
