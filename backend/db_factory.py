@@ -149,7 +149,7 @@ class DB_Factory:
         statement = 'select pos_x, pos_y ' \
                     'from soccer02.player ' \
                     'join soccer02.matchevent on soccer02.player.player_id = soccer02.matchevent.player_player_id ' \
-                    'where upeer(soccer02.player.name) like \'%' + search_string.upper() + '%\'and event_type like \'corner\' ' \
+                    'where upper(soccer02.player.name) like \'%' + search_string.upper() + '%\'and event_type like \'corner\' ' \
                     'and pos_x is not null and pos_y is not null and player.name is not null and player_id is not null ' \
                     'and player_player_id is not null;'
         con.cur.execute(statement)
@@ -163,7 +163,7 @@ class DB_Factory:
         statement = 'select pos_x, pos_y ' \
                     'from soccer02.player ' \
                     'join soccer02.matchevent on soccer02.player.player_id = soccer02.matchevent.player_player_id ' \
-                    'where upeer(soccer02.player.name) like \'%' + search_string.upper() + '%\'and event_type like \'goal\' ' \
+                    'where upper(soccer02.player.name) like \'%' + search_string.upper() + '%\'and event_type like \'goal\' ' \
                     'and pos_x is not null and pos_y is not null and player.name is not null and player_id is not null ' \
                     'and player_player_id is not null;'
         con.cur.execute(statement)
@@ -177,7 +177,7 @@ class DB_Factory:
         statement = 'select pos_x, pos_y ' \
                     'from soccer02.player ' \
                     'join soccer02.matchevent on soccer02.player.player_id = soccer02.matchevent.player_player_id ' \
-                    'where upeer(soccer02.player.name) like \'%' + search_string.upper() + '%\'and event_type like \'shoton\' ' \
+                    'where upper(soccer02.player.name) like \'%' + search_string.upper() + '%\'and event_type like \'shoton\' ' \
                     'and pos_x is not null and pos_y is not null and player.name is not null and player_id is not null ' \
                     'and player_player_id is not null;'
         con.cur.execute(statement)
@@ -191,7 +191,7 @@ class DB_Factory:
         statement = 'select pos_x, pos_y ' \
                     'from soccer02.player ' \
                     'join soccer02.matchevent on soccer02.player.player_id = soccer02.matchevent.player_player_id ' \
-                    'where upeer(soccer02.player.name) like \'%' + search_string.upper() + '%\'and event_type like \'shotoff\' ' \
+                    'where upper(soccer02.player.name) like \'%' + search_string.upper() + '%\'and event_type like \'shotoff\' ' \
                     'and pos_x is not null and pos_y is not null and player.name is not null and player_id is not null ' \
                     'and player_player_id is not null;'
         con.cur.execute(statement)

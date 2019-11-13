@@ -67,26 +67,41 @@ function App(props) {
     }, []);
 
     useEffect(() => {
-        if (player && player !== "none" && event === "foulcommit") {
-            setLoading(true);
-            fetch("http://localhost:3001/fouls/" + player)
-                .then(response => response.json())
-                .then(json => json.map(p => ({ x: p[0], y: p[1], value: 1 })))
-                .then(setData)
-                .then(() => setLoading(false));
-        } else {
-            setData([]);
-        }
-    }, [player, event]);
-
-    useEffect(() => {
-        if (player && player !== "none" && event === "goal") {
-            setLoading(true);
-            fetch("http://localhost:3001/goals/" + player)
-                .then(response => response.json())
-                .then(json => json.map(p => ({ x: p[0], y: p[1], value: 1 })))
-                .then(setData)
-                .then(() => setLoading(false));
+        if (player && player !== "none") {
+            let url = "";
+            switch (event) {
+                case "foulcommit": {
+                    url = "http://localhost:3001/fouls/" + player;
+                    break;
+                }
+                case "goal": {
+                    url = "http://localhost:3001/goals/" + player;
+                    break;
+                }
+                case "shotoff": {
+                    url = "http://localhost:3001/shoton/" + player;
+                    break;
+                }
+                case "shoton": {
+                    url = "http://localhost:3001/shoton/" + player;
+                    break;
+                }
+                case "corner": {
+                    url = "http://localhost:3001/corners/" + player;
+                    break;
+                }
+            }
+            if (url) {
+                setLoading(true);
+                fetch(url)
+                    .then(response => response.json())
+                    .then(json =>
+                        // flip the x, y !!!
+                        json.map(p => ({ x: p[1], y: p[0], value: 1 }))
+                    )
+                    .then(setData)
+                    .then(() => setLoading(false));
+            }
         } else {
             setData([]);
         }
