@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import h337 from "heatmap.js";
-import { LinearProgress, Fade } from "@material-ui/core";
+import { LinearProgress, Fade, Typography } from "@material-ui/core";
 
 export const Heatmap = props => {
     const containerRef = useRef();
@@ -27,27 +27,22 @@ export const Heatmap = props => {
         const heatmap = heatmapRef.current;
         if (props.data && props.data.length && container && heatmap) {
             const scale = {
-                x: container.clientWidth / 45,
-                y: container.clientHeight / 69
+                x: container.clientWidth / 69,
+                y: container.clientHeight / 45
             };
-            console.log(
-                props.data.map(point => ({
-                    x: Math.round(point.x * scale.x),
-                    y: Math.round(point.y * scale.y),
-                    value: point.value
-                }))
-            );
+            const formattedData = props.data.map(point => ({
+                x: Math.floor(point.x * scale.x),
+                y: Math.floor(point.y * scale.y),
+                value: point.value
+            }));
+            console.log(formattedData);
             heatmap.setData({
                 max: 2,
-                data: props.data.map(point => ({
-                    x: point.x * scale.x,
-                    y: point.y * scale.y,
-                    value: point.value
-                }))
+                data: formattedData
             });
         } else {
             heatmap.setData({
-                max: 100,
+                max: 1,
                 data: []
             });
         }
@@ -55,6 +50,9 @@ export const Heatmap = props => {
 
     return (
         <div>
+            {!props.data.length && !props.loading && (
+                <Typography>No Data Found</Typography>
+            )}
             <Fade in={props.loading}>
                 <LinearProgress style={{ height: 6 }} variant="query" />
             </Fade>
