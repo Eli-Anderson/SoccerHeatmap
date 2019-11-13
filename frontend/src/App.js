@@ -6,20 +6,7 @@ import { EventSelect } from "./eventSelect";
 import { PlayerSelect } from "./playerSelect";
 import { useState } from "react";
 import { Heatmap } from "./heatmap";
-
-// create our context. The object inside is not necessary, but may help with knowing what
-// fields we are keeping track of.
-// this will help us manage the state of the app easier than passing props around between components.
-const AppContext = React.createContext({
-    event: null,
-    setEvent: null,
-    team: null,
-    setTeam: null,
-    player: null,
-    setPlayer: null,
-    data: null,
-    dataLoading: false
-});
+import { MatchSelect } from "./matchSelect";
 
 // define our styles here. this transforms css styles to a class so it is easier to apply
 const useStyles = makeStyles({
@@ -31,146 +18,100 @@ const useStyles = makeStyles({
     }
 });
 
-/**
- * This is a dummy function for getting the Event data based on the provided filter parameters.
- * The data is asynchronously returned and depends on the event type, team, and player selected.
- */
-function getData({ event, team, player }) {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            if (!player) {
-                // currently only returns data when USA is selected
-                resolve(
-                    {
-                        USA: [
-                            {
-                                eventType: "goal",
-                                player1: "Christiano Ronaldo",
-                                player2: "Eden Hazard",
-                                match: 28192831,
-                                date: "2017-06-13",
-                                time: "37:42",
-                                location: 15
-                            },
-                            {
-                                eventType: "penalty",
-                                player1: "Zlatan Ibrahimovic",
-                                player2: "Robin van Persie",
-                                match: 29281923,
-                                date: "2017-07-18",
-                                time: "17:12",
-                                location: 16
-                            }
-                        ]
-                    }[team]
-                );
-            } else {
-                // currently only returns data when USA's players are selected
-                resolve(
-                    {
-                        "Andrea Pirlo": [
-                            {
-                                eventType: "penalty",
-                                player1: "Andrea Pirlo",
-                                player2: "Robin van Persie",
-                                match: 29281933,
-                                date: "2017-08-11",
-                                time: "15:15",
-                                location: 13
-                            },
-                            {
-                                eventType: "goal",
-                                player1: "Andrea Pirlo",
-                                player2: null,
-                                match: 29281933,
-                                date: "2017-08-11",
-                                time: "21:56",
-                                location: 4
-                            }
-                        ],
-                        "Robin van Persie": [
-                            {
-                                eventType: "penalty",
-                                player1: "Robin van Persie",
-                                player2: "Andrea Pirlo",
-                                match: 29281933,
-                                date: "2017-08-11",
-                                time: "15:15",
-                                location: 13
-                            },
-                            {
-                                eventType: "goal",
-                                player1: "Robin van Persie",
-                                player2: null,
-                                match: 29281933,
-                                date: "2017-08-11",
-                                time: "21:56",
-                                location: 4
-                            }
-                        ],
-                        "Yaya Toure": [
-                            {
-                                eventType: "penalty",
-                                player1: "Yaya Toure",
-                                player2: "Andrea Pirlo",
-                                match: 29281933,
-                                date: "2017-08-11",
-                                time: "15:15",
-                                location: 13
-                            },
-                            {
-                                eventType: "goal",
-                                player1: "Yaya Toure",
-                                player2: null,
-                                match: 29281933,
-                                date: "2017-08-11",
-                                time: "21:56",
-                                location: 4
-                            }
-                        ]
-                    }[player]
-                );
-            }
-            // wait a random time, so we can ensure that loaders are working
-        }, Math.random() * 3000);
+const removeDuplicates = arr => {
+    const results = [];
+    arr.forEach(v => {
+        if (!results.includes(v)) results.push(v);
     });
-}
+    return results;
+};
 
 function App(props) {
     const classes = useStyles(props);
-    const [event, setEvent] = useState("");
-    const [team, setTeam] = useState("");
-    const [player, setPlayer] = useState("");
+    const [event, setEvent] = useState("none");
+    const [team, setTeam] = useState("none");
+    const [player, setPlayer] = useState("none");
+    const [match, setMatch] = useState("none");
     const [data, setData] = useState([]);
-    const [dataLoading, setDataLoading] = useState(false);
+
+    const [loading, setLoading] = useState(false);
+    const [eventTypes, setEventTypes] = useState([]);
+    const [teams, setTeams] = useState([]);
+    const [matches, setMatches] = useState([]);
+    const [players, setPlayers] = useState([]);
 
     useEffect(() => {
-        if (team) {
-            setDataLoading(true);
-            getData({ event, team, player })
-                .then(d => setData(d))
-                .then(() => setDataLoading(false));
+        fetch("http://localhost:3001/lists/allTeams")
+            .then(response => response.json())
+            .then(d => d.sort())
+            .then(setTeams)
+            .catch(error => console.error(error));
+        // get the list of Event Types
+        fetch("http://localhost:3001/lists/allEventTypes")
+            .then(response => response.json())
+            .then(removeDuplicates)
+            .then(setEventTypes)
+            .catch(error => console.error(error));
+        // get the list of All Matches that we can filter later when a Team is selected
+        // currently this does not return the data we need, only the dates of the matches
+        // .then(() => fetch("http://localhost:3001/lists/allMatches"))
+        // .then(response => response.json())
+        // .then(d => d.sort()) // sort the dates
+        // .then(setMatches)
+        // get the list of all Players
+        fetch("http://localhost:3001/lists/allPlayers")
+            .then(response => response.json())
+            .then(d => d.sort()) // sort alphabetically
+            .then(setPlayers)
+            .catch(error => console.error(error));
+    }, []);
+
+    useEffect(() => {
+        if (player && player !== "none") {
+            let url = "";
+            switch (event) {
+                case "foulcommit": {
+                    url = "http://localhost:3001/fouls/" + player;
+                    break;
+                }
+                case "goal": {
+                    url = "http://localhost:3001/goals/" + player;
+                    break;
+                }
+                case "shotoff": {
+                    url = "http://localhost:3001/shoton/" + player;
+                    break;
+                }
+                case "shoton": {
+                    url = "http://localhost:3001/shoton/" + player;
+                    break;
+                }
+                case "corner": {
+                    url = "http://localhost:3001/corners/" + player;
+                    break;
+                }
+            }
+            if (url) {
+                setLoading(true);
+                fetch(url)
+                    .then(response => response.json())
+                    .then(json =>
+                        // flip the x, y !!!
+                        json.map(p => ({ x: p[1], y: p[0], value: 1 }))
+                    )
+                    .then(setData)
+                    .then(() => setLoading(false));
+            }
+        } else {
+            setData([]);
         }
-    }, [event, team, player]);
+    }, [player, event]);
 
     return (
         <div className={"App " + classes.app}>
-            <AppContext.Provider
-                // pass our state and mutators on to whichever children need them
-                value={{
-                    event,
-                    setEvent,
-                    team,
-                    setTeam,
-                    player,
-                    setPlayer,
-                    data,
-                    dataLoading
-                }}
-            >
-                <h3>Soccer Analyzer</h3>
-                {/* Grid helps us manage the layout of elements */}
-
+            <h3>Soccer Analyzer</h3>
+            {/* Grid helps us manage the layout of elements */}
+            <div>
                 <Grid
                     id="filterToolbar"
                     container
@@ -181,38 +122,46 @@ function App(props) {
                     <Grid item>
                         <Grid container spacing={5} direction="row">
                             <Grid item>
-                                <EventSelect />
+                                <EventSelect
+                                    value={event}
+                                    onChange={ev => setEvent(ev.target.value)}
+                                    data={eventTypes}
+                                />
                             </Grid>
                             <Grid item>
-                                <TeamSelect />
+                                <PlayerSelect
+                                    value={player}
+                                    onChange={ev => setPlayer(ev.target.value)}
+                                    data={players}
+                                />
                             </Grid>
                             <Grid item>
-                                <PlayerSelect />
+                                <TeamSelect
+                                    value={team}
+                                    onChange={ev => setTeam(ev.target.value)}
+                                    data={teams}
+                                />
+                            </Grid>
+                            <Grid item>
+                                <MatchSelect
+                                    value={match}
+                                    onChange={ev => setMatch(ev.target.value)}
+                                    team={team}
+                                    data={matches}
+                                />
                             </Grid>
                         </Grid>
                     </Grid>
                 </Grid>
 
-                {/* Content body */}
-
                 <Grid container className={classes.content}>
                     <Grid item>
-                        <Heatmap />
+                        <Heatmap data={data} loading={loading} />
                     </Grid>
                 </Grid>
-                <a
-
-                    className="App-link"
-                    href="localhost:3001/lists/allPlayers"
-                    target="_blank"
-                    rel="noopener noreferrer"
-
-                >
-                    test get_all_players_as_json_array
-                </a>
-            </AppContext.Provider>
+            </div>
         </div>
     );
 }
 
-export { App, AppContext };
+export { App };

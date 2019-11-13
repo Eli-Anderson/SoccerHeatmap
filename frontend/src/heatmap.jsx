@@ -1,11 +1,8 @@
-import React, { useContext, useRef, useEffect } from "react";
-import { AppContext } from "./App";
+import React, { useRef, useEffect } from "react";
 import h337 from "heatmap.js";
-import { LinearProgress, Fade } from "@material-ui/core";
+import { LinearProgress, Fade, Typography } from "@material-ui/core";
 
 export const Heatmap = props => {
-    const { data, dataLoading } = useContext(AppContext);
-
     const containerRef = useRef();
 
     // data stores the filtered data: the data we want to visualize
@@ -17,57 +14,50 @@ export const Heatmap = props => {
     // so we may need to import a library for this, or just come up with our own
     // function
 
-    const heatmap = useRef();
+    const heatmapRef = useRef(null);
 
     useEffect(() => {
-        heatmap.current = h337.create({
+        heatmapRef.current = h337.create({
             container: containerRef.current
         });
     }, []);
 
     useEffect(() => {
-        if (data && data.length) {
-            // test heatmap with random data
-            let randomData = [];
-            const n = 25 + Math.random() * 50;
-            for (let i = 0; i < n; i++) {
-                randomData.push({
-                    x: Math.round(
-                        Math.random() * containerRef.current.offsetWidth
-                    ),
-                    y: Math.round(
-                        Math.random() * containerRef.current.offsetHeight
-                    ),
-                    value: Math.round(Math.random() * 100)
-                });
-            }
-
-            /* replace randomData with the real data when the time comes
-             * the data is expected to be in the form:
-             * [
-             *   { x: int, y: int, value: int },
-             *   ...
-             * ]
-             */
-            heatmap.current.setData({
-                max: 100,
-                data: randomData
+        const container = containerRef.current;
+        const heatmap = heatmapRef.current;
+        if (props.data && props.data.length && container && heatmap) {
+            const scale = {
+                x: container.clientWidth / 69,
+                y: container.clientHeight / 45
+            };
+            const formattedData = props.data.map(point => ({
+                x: Math.floor(point.x * scale.x),
+                y: Math.floor(point.y * scale.y),
+                value: point.value
+            }));
+            console.log(formattedData);
+            heatmap.setData({
+                max: 2,
+                data: formattedData
             });
         } else {
-            heatmap.current.setData({
-                max: 100,
+            heatmap.setData({
+                max: 1,
                 data: []
             });
         }
-    }, [data]);
+    }, [props.data]);
 
     return (
         <div>
-            <Fade in={dataLoading}>
+            {!props.data.length && !props.loading && (
+                <Typography>No Data Found</Typography>
+            )}
+            <Fade in={props.loading}>
                 <LinearProgress style={{ height: 6 }} variant="query" />
             </Fade>
             <div ref={containerRef}>
-                <img src="field.svg" />
+                <img src="field.svg" alt="" />
             </div>
         </div>
     );
