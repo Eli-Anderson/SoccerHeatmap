@@ -78,6 +78,18 @@ function App(props) {
                     url = "http://localhost:3001/goals/" + player;
                     break;
                 }
+                case "shotoff": {
+                    url = "http://localhost:3001/shoton/" + player;
+                    break;
+                }
+                case "shoton": {
+                    url = "http://localhost:3001/shoton/" + player;
+                    break;
+                }
+                case "corner": {
+                    url = "http://localhost:3001/corners/" + player;
+                    break;
+                }
             }
             if (url) {
                 setLoading(true);
