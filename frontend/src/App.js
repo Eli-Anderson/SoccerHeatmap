@@ -7,6 +7,7 @@ import { PlayerSelect } from "./playerSelect";
 import { useState } from "react";
 import { Heatmap } from "./heatmap";
 import { MatchSelect } from "./matchSelect";
+import { PlayerSearch } from "./PlayerSearch";
 
 // define our styles here. this transforms css styles to a class so it is easier to apply
 const useStyles = makeStyles({
@@ -129,7 +130,7 @@ function App(props) {
                                 />
                             </Grid>
                             <Grid item>
-                                <PlayerSelect
+                                <PlayerSearch
                                     value={player}
                                     onChange={ev => setPlayer(ev.target.value)}
                                     data={players}
