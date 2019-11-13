@@ -97,9 +97,30 @@ def player_heatmap_fouls(player_name):
     return result
 
 @app.route("/goals/<player_name>")
-@cache.cached(timeout=10000)
+@cache.cached(timeout=5000)
 def player_heatmap_goals(player_name):
     dummy = db.player_heatmap_goal(player_name)
+    result = json.dumps(dummy)
+    return result
+
+@app.route("/corners/<player_name>")
+@cache.cached(timeout=5000)
+def player_heatmap_corners(player_name):
+    dummy = db.player_heatmap_corner(player_name)
+    result = json.dumps(dummy)
+    return result
+
+@app.route("/shotoff/<player_name>")
+@cache.cached(timeout=5000)
+def player_heatmap_shottoff(player_name):
+    dummy = db.player_heatmap_shotoff(player_name)
+    result = json.dumps(dummy)
+    return result
+
+@app.route("/shoton/<player_name>")
+@cache.cached(timeout=5000)
+def player_heatmap_shoton(player_name):
+    dummy = db.player_heatmap_shoton(player_name)
     result = json.dumps(dummy)
     return result
 
