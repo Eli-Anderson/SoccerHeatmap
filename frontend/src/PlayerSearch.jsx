@@ -57,7 +57,7 @@ export const PlayerSearch = props => {
                         top: 60,
                         maxHeight: 500,
                         overflow: "scroll",
-                        boxShadow: "0px 0px 20px 2px",
+                        boxShadow: "0px 0px 20px 2px #666",
                         borderRadius: "0.25rem"
                     }}
                 >
