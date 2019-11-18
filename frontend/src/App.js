@@ -132,7 +132,7 @@ function App(props) {
                             <Grid item>
                                 <PlayerSearch
                                     value={player}
-                                    onChange={ev => setPlayer(ev.target.value)}
+                                    onChange={p => setPlayer(p)}
                                     data={players}
                                 />
                             </Grid>

@@ -11,13 +11,6 @@ import _ from "lodash";
 
 import { isFocused, useFocus } from "web-api-hooks";
 
-// const attemptFetch = _.debounce(
-//     value => {
-//         return fetch("http://localhost:3001/search/players/" + value);
-//     },
-//     500,
-//     { trailing: true, leading: false }
-// );
 export const PlayerSearch = props => {
     const [value, setValue] = useState("");
     const [data, setData] = useState([]);
@@ -68,7 +61,15 @@ export const PlayerSearch = props => {
                     }}
                 >
                     {data.map((x, i) => (
-                        <MenuItem key={i}>{x}</MenuItem>
+                        <MenuItem
+                            key={i}
+                            onClick={() => {
+                                props.onChange(x);
+                                setValue(x);
+                            }}
+                        >
+                            {x}
+                        </MenuItem>
                     ))}
                 </MenuList>
             </Fade>
