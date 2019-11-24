@@ -7,18 +7,18 @@ class DB_Factory:
     def list_all_teams(self):
         con = Connection()
         # String translation in SQL Query
-        statement = 'select distinct long_name from soccer02.team'
+        statement = 'select distinct * from soccer02.team'
         con.cur.execute(statement)
         res_tupel = con.cur.fetchall()
         res_string_list = [str(i[0]) for i in res_tupel]
         con.close()
-        return res_string_list
+        return res_tupel
 
     def search_team(self, team_name):
         search_string = '' + team_name
         con = Connection()
         statement = 'select long_name, short_name from soccer02.team where upper(long_name) like \'%' + search_string.upper() + '%\' ' \
-		    'and long_name is not null and short_name is not null;'
+		    'and long_name is not null and short_name is not null'
         con.cur.execute(statement)
         res_tupel = con.cur.fetchall()
         print("#### Type: ", type(res_tupel))
@@ -50,7 +50,7 @@ class DB_Factory:
         con = Connection()
         statement = 'select distinct * from soccer02.matchevent ' \
                     'where upper(event_type) like \'%' + search_string.upper() + '%\' ' \
-		    'and pos_x is not null and pos_y is not null;'
+		    'and pos_x is not null and pos_y is not null'
         con.cur.execute(statement)
         res = con.cur.fetchall()
         return res
@@ -60,7 +60,7 @@ class DB_Factory:
         statement = 'select pos_x, pos_y, event_type, elapsed, "comment" from soccer02.matchevent ' \
                     'where matchevent_id = ' + event_id + ' ' \
                     'and pos_x is not null and pos_y is not null and event_type is not null ' \
-                    'and elapsed is not null and "comment" is not null;'
+                    'and elapsed is not null and "comment" is not null'
         con.cur.execute(statement)
         res = con.cur.fetchall()
         return res
@@ -71,7 +71,7 @@ class DB_Factory:
         con = Connection()
         statement = 'select distinct "date", result, home_team_goal, away_team_goal from soccer02.match ' \
 		    'where "date" is not null and result is not null and home_team_goal is not null ' \
-		    'and away_team_goal is not null;'
+		    'and away_team_goal is not null'
         con.cur.execute(statement)
         res_tupel = con.cur.fetchall()
         res_string_list = [str(i[0]) for i in res_tupel]
@@ -79,14 +79,14 @@ class DB_Factory:
         return res_string_list
 
     # TODO date-format needs to be like '20081220 00:00:00.000'
-    # SELECT TO_DATE('2012-06-05', 'YYYY-MM-DD') FROM dual;
+    # SELECT TO_DATE('2012-06-05', 'YYYY-MM-DD') FROM dual
     def match_details(self, home_team_name, away_team_name, date):
         con = Connection()
         statement = 'select player.name, match.result from soccer02.player, soccer02.match ' \
                     'inner join soccer02.match on team.team_id = match.team_awayteam_id ' \
                     'where upper(long_name) like \'%' + home_team_name + '%\' and date = \'' + date + '\' ' \
 		    'and player.name is not null and match.result is not null and team.team_id is not null ' \
-		    'and match.team_awayteam_id is not null;'
+		    'and match.team_awayteam_id is not null'
        
         con.cur.execute(statement)
         res = con.cur.fetchall()
@@ -99,9 +99,9 @@ class DB_Factory:
         con = Connection()
         statement = 'select team.long_name, match.result from soccer02.team ' \
                     'inner join soccer02.match on team.team_id = match.team_hometeam_id ' \
-                    'where upper(long_name) like \'%' + search_string.upper() + '%\' ' \
+                    'where upper(long_name) =\'' + search_string.upper() + '\'' \
 		    'and team.long_name is not null and match.result is not null and team_id is not null ' \
-		    'and team_hometeam_id is not null;'
+		    'and team_hometeam_id is not null'
         con.cur.execute(statement)
         res = con.cur.fetchall()
         #pprint(res)
@@ -112,10 +112,10 @@ class DB_Factory:
         search_string = '' + team_name
         con = Connection()
         statement = 'select team.long_name, match.result from soccer02.team ' \
-                    'inner join soccer02.match on team.team_id = match.team_awayteam_id ' \
-                    'where upper(long_name) like \'%' + search_string.upper() + '%\' ' \
-		    'and long_name is not null and result is not null and team_id is not null ' \
-		    'and team_awayteam_id is not null;'
+                    'inner join soccer02.match on team.team_id = match.team_hometeam_id ' \
+                    'where upper(long_name) =\'' + search_string.upper() + '\'' \
+		    'and team.long_name is not null and match.result is not null and team_id is not null ' \
+		    'and team_hometeam_id is not null'
         con.cur.execute(statement)
         res = con.cur.fetchall()
         #pprint(res)
@@ -202,4 +202,15 @@ class DB_Factory:
         #pprint(res)
         return res
 
-
+    def search_home_teams_matches_by_id(self, team_id):
+        search_string = '\'' + team_id + '\''
+        con = Connection()
+        statement = 'select match_id, team_hometeam_id, team_awayteam_id, home_team_goal, away_team_goal, "date" from soccer02.match ' \
+            'where team_hometeam_id = '+ team_id +'' \
+		    'and team_awayteam_id is not null and home_team_goal is not null ' \
+		    'and away_team_goal is not null'
+        con.cur.execute(statement)
+        res = con.cur.fetchall()
+        #pprint(res)
+        con.close()
+        return res

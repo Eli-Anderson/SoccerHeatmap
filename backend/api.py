@@ -123,6 +123,13 @@ def player_heatmap_shoton(player_name):
     result = json.dumps(dummy)
     return result
 
+@app.route("/matches/<team_id>")
+@cache.cached(timeout=5000)
+def get_matches_by_team_id(team_id):
+    dummy = db.search_home_teams_matches_by_id(team_id)
+    result = json.dumps(dummy, default=str)
+    return result
+
 """
 Running service.
 """
