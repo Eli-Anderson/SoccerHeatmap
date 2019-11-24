@@ -9,7 +9,7 @@ import {
 } from "@material-ui/core";
 import _ from "lodash";
 
-import { isFocused, useFocus } from "web-api-hooks";
+import { useFocus } from "web-api-hooks";
 
 export const PlayerSearch = props => {
     const [value, setValue] = useState("");
