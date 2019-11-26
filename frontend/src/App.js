@@ -115,46 +115,20 @@ function App(props) {
     /* Fetch heatmap data based on match_id */
 
     /* uncomment when API is implemented for this endpoint */
-    // useEffect(() => {
-    //     if (team && team !== "none" && match && match !== 'none') {
-    //         let url = "";
-    //         switch (event) {
-    //             case "foulcommit": {
-    //                 url = "http://localhost:3001/fouls/match/" + match;
-    //                 break;
-    //             }
-    //             case "goal": {
-    //                 url = "http://localhost:3001/goals/match/" + match;
-    //                 break;
-    //             }
-    //             case "shotoff": {
-    //                 url = "http://localhost:3001/shoton/match/" + match;
-    //                 break;
-    //             }
-    //             case "shoton": {
-    //                 url = "http://localhost:3001/shoton/match/" + match;
-    //                 break;
-    //             }
-    //             case "corner": {
-    //                 url = "http://localhost:3001/corners/match/" + match;
-    //                 break;
-    //             }
-    //         }
-    //         if (url) {
-    //             setLoading(true);
-    //             fetch(url)
-    //                 .then(response => response.json())
-    //                 .then(json =>
-    //                     // flip the x, y !!!
-    //                     json.map(p => ({ x: p[1], y: p[0], value: 1 }))
-    //                 )
-    //                 .then(setData)
-    //                 .then(() => setLoading(false));
-    //         }
-    //     } else {
-    //         setData([]);
-    //     }
-    // }, [player, event]);
+    useEffect(() => {
+        if (event && team && team !== "none" && match && match !== "none") {
+            let url = `http://localhost:3001/match/${match}/${event}`;
+            setLoading(true);
+            fetch(url)
+                .then(response => response.json())
+                .then(json =>
+                    // flip the x, y !!!
+                    json.map(p => ({ x: p[1], y: p[0], value: 1 }))
+                )
+                .then(setData)
+                .then(() => setLoading(false));
+        }
+    }, [team, event, match]);
 
     return (
         <div className={"App " + classes.app}>

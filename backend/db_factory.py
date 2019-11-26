@@ -214,3 +214,15 @@ class DB_Factory:
         #pprint(res)
         con.close()
         return res
+
+    # Get heatmap data for a match based on given match_id and event_type
+    def match_heatmap(self, match_id, event_type):
+        con = Connection()
+        statement = 'select pos_x, pos_y ' \
+                    'from soccer02.matchevent ' \
+                    'where match_match_id = ' + match_id + '' \
+                    'and event_type = \'' + event_type + '\'' \
+                    'and pos_x is not null and pos_y is not null'
+        con.cur.execute(statement)
+        res = con.cur.fetchall()
+        return res

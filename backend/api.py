@@ -130,6 +130,13 @@ def get_matches_by_team_id(team_id):
     result = json.dumps(dummy, default=str)
     return result
 
+@app.route("/match/<match_id>/<event_type>")
+@cache.cached(timeout=5000)
+def get_heatmap_data_for_match(match_id, event_type):
+    dummy = db.match_heatmap(match_id, event_type)
+    result = json.dumps(dummy, default=str)
+    return result
+
 """
 Running service.
 """
