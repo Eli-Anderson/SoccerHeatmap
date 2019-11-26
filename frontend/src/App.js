@@ -1,7 +1,15 @@
 import React, { useEffect } from "react";
 import "./App.css";
 import { TeamSelect } from "./teamSelect";
-import { Grid, makeStyles } from "@material-ui/core";
+import {
+    Grid,
+    makeStyles,
+    FormControl,
+    FormLabel,
+    RadioGroup,
+    FormControlLabel,
+    Radio
+} from "@material-ui/core";
 import { EventSelect } from "./eventSelect";
 import { PlayerSelect } from "./playerSelect";
 import { useState } from "react";
@@ -39,6 +47,8 @@ function App(props) {
     const [teams, setTeams] = useState([]);
     const [matches, setMatches] = useState([]);
     const [players, setPlayers] = useState([]);
+
+    const [searchType, setSearchType] = useState("player");
 
     useEffect(() => {
         fetch("http://localhost:3001/lists/allTeams")
@@ -95,6 +105,8 @@ function App(props) {
                     url = "http://localhost:3001/corners/" + player;
                     break;
                 }
+                default:
+                    url = null;
             }
             if (url) {
                 setLoading(true);
@@ -143,7 +155,12 @@ function App(props) {
                     alignItems="center"
                 >
                     <Grid item>
-                        <Grid container spacing={5} direction="row">
+                        <Grid
+                            container
+                            spacing={5}
+                            direction="row"
+                            alignItems="center"
+                        >
                             <Grid item>
                                 <EventSelect
                                     value={event}
@@ -152,28 +169,64 @@ function App(props) {
                                 />
                             </Grid>
                             <Grid item>
-                                <PlayerSelect
-                                    value={player}
-                                    onChange={ev => setPlayer(ev.target.value)}
-                                    data={players}
-                                />
+                                <FormControl component="fieldset">
+                                    <FormLabel component="legend">
+                                        Search by...
+                                    </FormLabel>
+                                    <RadioGroup
+                                        value={searchType}
+                                        onChange={(ev, value) =>
+                                            setSearchType(value)
+                                        }
+                                    >
+                                        <FormControlLabel
+                                            value="player"
+                                            control={<Radio />}
+                                            label="Player"
+                                        />
+                                        <FormControlLabel
+                                            value="match"
+                                            control={<Radio />}
+                                            label="Match"
+                                        />
+                                    </RadioGroup>
+                                </FormControl>
                             </Grid>
-                            <Grid item>
-                                <TeamSelect
-                                    value={team}
-                                    onChange={ev => setTeam(ev.target.value)}
-                                    data={teams}
-                                />
-                            </Grid>
-                            <Grid item>
-                                <MatchSelect
-                                    value={match}
-                                    onChange={ev => setMatch(ev.target.value)}
-                                    team={team}
-                                    data={matches}
-                                    teams={teams}
-                                />
-                            </Grid>
+                            {searchType === "player" && (
+                                <Grid item>
+                                    <PlayerSelect
+                                        value={player}
+                                        onChange={ev =>
+                                            setPlayer(ev.target.value)
+                                        }
+                                        data={players}
+                                    />
+                                </Grid>
+                            )}
+                            {searchType === "match" && (
+                                <>
+                                    <Grid item>
+                                        <TeamSelect
+                                            value={team}
+                                            onChange={ev =>
+                                                setTeam(ev.target.value)
+                                            }
+                                            data={teams}
+                                        />
+                                    </Grid>
+                                    <Grid item>
+                                        <MatchSelect
+                                            value={match}
+                                            onChange={ev =>
+                                                setMatch(ev.target.value)
+                                            }
+                                            team={team}
+                                            data={matches}
+                                            teams={teams}
+                                        />
+                                    </Grid>
+                                </>
+                            )}
                         </Grid>
                     </Grid>
                 </Grid>
