@@ -231,7 +231,7 @@ function App(props) {
                     </Grid>
                 </Grid>
 
-                <Grid container className={classes.content}>
+                <Grid container className={classes.content} justify="center">
                     <Grid item>
                         <Heatmap data={data} loading={loading} />
                     </Grid>
