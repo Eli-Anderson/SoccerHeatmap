@@ -41,7 +41,7 @@ export const MatchSelect = ({ data, teams, ...props }) => {
                 <InputLabel htmlFor="matchSelect">Match</InputLabel>
                 <Select
                     id="matchSelect"
-                    disabled={!props.team}
+                    disabled={!props.team || props.team === "none"}
                     classes={{
                         root: classes.selectRoot
                     }}
