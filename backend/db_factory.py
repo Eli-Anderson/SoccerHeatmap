@@ -202,16 +202,15 @@ class DB_Factory:
         #pprint(res)
         return res
 
-    def search_home_teams_matches_by_id(self, team_id):
+    def search_matches_by_team_id(self, team_id):
         search_string = '\'' + team_id + '\''
         con = Connection()
         statement = 'select match_id, team_hometeam_id, team_awayteam_id, home_team_goal, away_team_goal, "date" from soccer02.match ' \
-            'where team_hometeam_id = '+ team_id +'' \
-		    'and team_awayteam_id is not null and home_team_goal is not null ' \
+            'where team_hometeam_id = '+ team_id +' or team_awayteam_id = ' + team_id + ' ' \
+		    'and team_hometeam_id is not null and team_awayteam_id is not null and home_team_goal is not null ' \
 		    'and away_team_goal is not null'
         con.cur.execute(statement)
         res = con.cur.fetchall()
-        #pprint(res)
         con.close()
         return res
 
