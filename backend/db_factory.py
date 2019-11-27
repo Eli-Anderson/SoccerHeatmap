@@ -21,9 +21,9 @@ class DB_Factory:
 		    'and long_name is not null and short_name is not null;'
         con.cur.execute(statement)
         res_tupel = con.cur.fetchall()
-        print("#### Type: ", type(res_tupel))
-        print("#### Result: ", res_tupel)
-        print("#### 1. Element of the tuple: ", res_tupel[0][0])
+        #print("#### Type: ", type(res_tupel))
+        #print("#### Result: ", res_tupel)
+        #print("#### 1. Element of the tuple: ", res_tupel[0][0])
         con.close()
         return res_tupel
 
