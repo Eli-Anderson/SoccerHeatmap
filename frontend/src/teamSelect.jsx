@@ -1,9 +1,10 @@
 import React from "react";
 import {
-    NativeSelect,
+    Select,
     makeStyles,
     FormControl,
-    InputLabel
+    InputLabel,
+    MenuItem
 } from "@material-ui/core";
 
 // define our styles here. this transforms css styles to a class so it is easier to apply
@@ -16,6 +17,8 @@ const useStyles = makeStyles({
     }
 });
 
+const [API_ID, LONG_NAME, SHORT_NAME, TEAM_ID] = [0, 1, 2, 3];
+
 export const TeamSelect = props => {
     const classes = useStyles(props);
 
@@ -23,25 +26,25 @@ export const TeamSelect = props => {
         <div>
             <FormControl>
                 <InputLabel htmlFor="teamSelect">Team</InputLabel>
-                <NativeSelect
+                <Select
                     id="teamSelect"
                     className={classes.select}
                     value={props.value}
                     onChange={props.onChange}
                 >
-                    <option
+                    <MenuItem
                         className={classes.firstItem}
                         key="all"
                         value="none"
                     >
-                        {props.data.length ? "" : "Loading..."}
-                    </option>
-                    {props.data.map(x => (
-                        <option key={x} value={x}>
-                            {x}
-                        </option>
+                        {props.data.length ? "None" : "Loading..."}
+                    </MenuItem>
+                    {props.data.map(team => (
+                        <MenuItem key={team[TEAM_ID]} value={team[TEAM_ID]}>
+                            {team[LONG_NAME]}
+                        </MenuItem>
                     ))}
-                </NativeSelect>
+                </Select>
             </FormControl>
         </div>
     );

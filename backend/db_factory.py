@@ -7,12 +7,25 @@ class DB_Factory:
     def list_all_teams(self):
         con = Connection()
         # String translation in SQL Query
-        statement = 'select distinct long_name from soccer02.team'
+        statement = 'select distinct * from soccer02.team'
         con.cur.execute(statement)
         res_tupel = con.cur.fetchall()
         res_string_list = [str(i[0]) for i in res_tupel]
         con.close()
-        return res_string_list
+        return res_tupel
+
+    def search_team(self, team_name):
+        search_string = '' + team_name
+        con = Connection()
+        statement = 'select long_name, short_name from soccer02.team where upper(long_name) like \'%' + search_string.upper() + '%\' ' \
+		    'and long_name is not null and short_name is not null'
+        con.cur.execute(statement)
+        res_tupel = con.cur.fetchall()
+        print("#### Type: ", type(res_tupel))
+        print("#### Result: ", res_tupel)
+        print("#### 1. Element of the tuple: ", res_tupel[0][0])
+        con.close()
+        return res_tupel
 
     # Returns all matchevents as a string-list
     def list_all_events(self):
@@ -66,7 +79,7 @@ class DB_Factory:
         return res_string_list
 
     # TODO date-format needs to be like '20081220 00:00:00.000'
-    # SELECT TO_DATE('2012-06-05', 'YYYY-MM-DD') FROM dual;
+    # SELECT TO_DATE('2012-06-05', 'YYYY-MM-DD') FROM dual
     def match_details(self, home_team_name, away_team_name, date):
         con = Connection()
         statement = 'select player.name, match.result from soccer02.player, soccer02.match ' \
@@ -107,7 +120,7 @@ class DB_Factory:
         con = Connection()
         statement = 'select team.long_name, match.result from soccer02.team ' \
                     'inner join soccer02.match on team.team_id = match.team_hometeam_id ' \
-                    'where upper(long_name) like \'%' + search_string.upper() + '%\' ' \
+                    'where upper(long_name) =\'' + search_string.upper() + '\'' \
 		    'and team.long_name is not null and match.result is not null and team_id is not null ' \
 		    'and team_hometeam_id is not null'
         con.cur.execute(statement)
@@ -121,8 +134,8 @@ class DB_Factory:
         statement = 'select team.long_name, match.result from soccer02.team ' \
                     'inner join soccer02.match on team.team_id = match.team_awayteam_id ' \
                     'where upper(long_name) like \'%' + search_string.upper() + '%\' ' \
-		    'and long_name is not null and result is not null and team_id is not null ' \
-		    'and team_awayteam_id is not null'
+		                'and long_name is not null and result is not null and team_id is not null ' \
+		                'and team_awayteam_id is not null'
         con.cur.execute(statement)
         res = con.cur.fetchall()
         con.close()
@@ -197,3 +210,28 @@ class DB_Factory:
         con.cur.execute(statement)
         res = con.cur.fetchall()
         return res
+
+    def search_matches_by_team_id(self, team_id):
+        search_string = '\'' + team_id + '\''
+        con = Connection()
+        statement = 'select match_id, team_hometeam_id, team_awayteam_id, home_team_goal, away_team_goal, "date" from soccer02.match ' \
+            'where team_hometeam_id = '+ team_id +' or team_awayteam_id = ' + team_id + ' ' \
+		    'and team_hometeam_id is not null and team_awayteam_id is not null and home_team_goal is not null ' \
+		    'and away_team_goal is not null'
+        con.cur.execute(statement)
+        res = con.cur.fetchall()
+        con.close()
+        return res
+
+    # Get heatmap data for a match based on given match_id and event_type
+    def match_heatmap(self, match_id, event_type):
+        con = Connection()
+        statement = 'select pos_x, pos_y ' \
+                    'from soccer02.matchevent ' \
+                    'where match_match_id = ' + match_id + '' \
+                    'and event_type = \'' + event_type + '\'' \
+                    'and pos_x is not null and pos_y is not null'
+        con.cur.execute(statement)
+        res = con.cur.fetchall()
+        return res
+
