@@ -15,6 +15,7 @@ import { PlayerSelect } from "./playerSelect";
 import { useState } from "react";
 import { Heatmap } from "./heatmap";
 import { MatchSelect } from "./matchSelect";
+import { PlayerSearch } from "./PlayerSearch";
 
 // define our styles here. this transforms css styles to a class so it is easier to apply
 const useStyles = makeStyles({
@@ -169,6 +170,28 @@ function App(props) {
                                 />
                             </Grid>
                             <Grid item>
+
+                                <PlayerSearch
+                                    value={player}
+                                    onChange={p => setPlayer(p)}
+                                    data={players}
+                                />
+                            </Grid>
+                            <Grid item>
+                                <TeamSelect
+                                    value={team}
+                                    onChange={ev => setTeam(ev.target.value)}
+                                    data={teams}
+                                />
+                            </Grid>
+                            <Grid item>
+                                <MatchSelect
+                                    value={match}
+                                    onChange={ev => setMatch(ev.target.value)}
+                                    team={team}
+                                    data={matches}
+                                />
+
                                 <FormControl component="fieldset">
                                     <FormLabel component="legend">
                                         Search by...
@@ -191,6 +214,7 @@ function App(props) {
                                         />
                                     </RadioGroup>
                                 </FormControl>
+
                             </Grid>
                             {searchType === "player" && (
                                 <Grid item>

@@ -49,6 +49,17 @@ def teamMatches(team_name):
     result = json.dumps(dummy)
     return result
 
+""" Returns all players with contained name.
+:param team_name: The name of the team as a string.
+:returns: Result as JSON.
+"""
+@app.route("/search/players/<player_name>")
+@cache.cached(timeout=5000)
+def searchPlayers(player_name):
+    dummy = db.search_player(player_name)
+    result = json.dumps(dummy)
+    return result
+
 """ Returns all players.
 :returns: Result as JSON.
 """

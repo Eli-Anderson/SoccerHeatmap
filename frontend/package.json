@@ -5,10 +5,12 @@
   "dependencies": {
     "@material-ui/core": "^4.5.0",
     "heatmap.js": "^2.0.5",
+    "lodash": "^4.17.15",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-scripts": "3.1.2",
-    "typescript": "^3.7.2"
+    "typescript": "^3.7.2",
+    "web-api-hooks": "^2.2.2"
   },
   "scripts": {
     "start": "react-scripts start",
