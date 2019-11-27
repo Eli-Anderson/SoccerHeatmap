@@ -1,3 +1,4 @@
 *.conf
 backend/__pycache__/*
 /.vscode/
+.idea/
