@@ -1,2 +1,3 @@
 *.conf
 backend/__pycache__/*
+.vscode/settings.json
