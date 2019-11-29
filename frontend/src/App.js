@@ -82,43 +82,17 @@ function App(props) {
     }, [team]);
 
     useEffect(() => {
-        if (player && player !== "none") {
-            let url = "";
-            switch (event) {
-                case "foulcommit": {
-                    url = "http://localhost:3001/fouls/" + player;
-                    break;
-                }
-                case "goal": {
-                    url = "http://localhost:3001/goals/" + player;
-                    break;
-                }
-                case "shotoff": {
-                    url = "http://localhost:3001/shoton/" + player;
-                    break;
-                }
-                case "shoton": {
-                    url = "http://localhost:3001/shoton/" + player;
-                    break;
-                }
-                case "corner": {
-                    url = "http://localhost:3001/corners/" + player;
-                    break;
-                }
-                default:
-                    url = null;
-            }
-            if (url) {
-                setLoading(true);
-                fetch(url)
-                    .then(response => response.json())
-                    .then(json =>
-                        // flip the x, y !!!
-                        json.map(p => ({ x: p[1], y: p[0], value: 1 }))
-                    )
-                    .then(setData)
-                    .then(() => setLoading(false));
-            }
+        if (event && event !== "none" && player && player !== "none") {
+            let url = `http://localhost:3001/player/${player}/${event}`;
+            setLoading(true);
+            fetch(url)
+                .then(response => response.json())
+                .then(json =>
+                    // flip the x, y !!!
+                    json.map(p => ({ x: p[1], y: p[0], value: 1 }))
+                )
+                .then(setData)
+                .then(() => setLoading(false));
         } else {
             setData([]);
         }

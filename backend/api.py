@@ -82,51 +82,19 @@ def match(home_team, away_team, date):
     result = json.dumps(dummy)
     return result
 
-################################################# Heatmap
-
-""" Heat-map for all attempts on goal of a player from all data
-:param player_name: Name of the player.
-:returns: Result as JSON.
-"""
-@app.route("/fouls/<player_name>")
-@cache.cached(timeout=5000)
-def player_heatmap_fouls(player_name):
-    dummy = db.player_heatmap_fouls(player_name)
-    result = json.dumps(dummy)
-    return result
-
-@app.route("/goals/<player_name>")
-@cache.cached(timeout=5000)
-def player_heatmap_goals(player_name):
-    dummy = db.player_heatmap_goal(player_name)
-    result = json.dumps(dummy)
-    return result
-
-@app.route("/corners/<player_name>")
-@cache.cached(timeout=5000)
-def player_heatmap_corners(player_name):
-    dummy = db.player_heatmap_corner(player_name)
-    result = json.dumps(dummy)
-    return result
-
-@app.route("/shotoff/<player_name>")
-@cache.cached(timeout=5000)
-def player_heatmap_shottoff(player_name):
-    dummy = db.player_heatmap_shotoff(player_name)
-    result = json.dumps(dummy)
-    return result
-
-@app.route("/shoton/<player_name>")
-@cache.cached(timeout=5000)
-def player_heatmap_shoton(player_name):
-    dummy = db.player_heatmap_shoton(player_name)
-    result = json.dumps(dummy)
-    return result
 
 @app.route("/matches/<team_id>")
 @cache.cached(timeout=5000)
 def get_matches_by_team_id(team_id):
     dummy = db.search_matches_by_team_id(team_id)
+    result = json.dumps(dummy, default=str)
+    return result
+
+################################################# Heatmap
+@app.route("/player/<player_name>/<event_type>")
+@cache.cached(timeout=5000)
+def get_heatmap_data_for_player(player_name, event_type):
+    dummy = db.player_heatmap(player_name, event_type)
     result = json.dumps(dummy, default=str)
     return result
 

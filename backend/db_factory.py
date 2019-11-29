@@ -121,86 +121,6 @@ class DB_Factory:
         #pprint(res)
         con.close()
         return res
-    
-    # Heat-map for all attempts on goal of a player from all data
-    def player_heatmap_fouls(self, player_name):
-        con = Connection()
-        search_string = '' + player_name
-        statement = 'select pos_x, pos_y ' \
-                    'from soccer02.player ' \
-                    'join soccer02.matchevent on soccer02.player.player_id = soccer02.matchevent.player_player_id ' \
-                    'where upper(soccer02.player.name) like \'%' + search_string.upper() + '%\'and event_type like \'foulcommit\' ' \
-		    'and pos_x is not null and pos_y is not null and player.name is not null and player_id is not null ' \
-		    'and player_player_id is not null'
-        #print(statement)
-        con.cur.execute(statement)
-        res = con.cur.fetchall()
-        #pprint(res)
-        return res
-
-    # corner
-    def player_heatmap_corner(self, player_name):
-        search_string = '' + player_name
-        con = Connection()
-        statement = 'select pos_x, pos_y ' \
-                    'from soccer02.player ' \
-                    'join soccer02.matchevent on soccer02.player.player_id = soccer02.matchevent.player_player_id ' \
-                    'where upper(soccer02.player.name) like \'%' + search_string.upper() + '%\'and event_type like \'corner\' ' \
-                    'and pos_x is not null and pos_y is not null and player.name is not null and player_id is not null ' \
-                    'and player_player_id is not null'
-        #print(statement)
-        con.cur.execute(statement)
-        res = con.cur.fetchall()
-        #pprint(res)
-        return res
-
-    # goals
-    def player_heatmap_goal(self, player_name):
-        search_string = '' + player_name
-        con = Connection()
-        statement = 'select pos_x, pos_y ' \
-                    'from soccer02.player ' \
-                    'join soccer02.matchevent on soccer02.player.player_id = soccer02.matchevent.player_player_id ' \
-                    'where upper(soccer02.player.name) like \'%' + search_string.upper() + '%\'and event_type like \'goal\' ' \
-                    'and pos_x is not null and pos_y is not null and player.name is not null and player_id is not null ' \
-                    'and player_player_id is not null'
-        #print(statement)
-        con.cur.execute(statement)
-        res = con.cur.fetchall()
-        #pprint(res)
-        return res
-
-    # shoton
-    def player_heatmap_shoton(self, player_name):
-        search_string = '' + player_name
-        con = Connection()
-        statement = 'select pos_x, pos_y ' \
-                    'from soccer02.player ' \
-                    'join soccer02.matchevent on soccer02.player.player_id = soccer02.matchevent.player_player_id ' \
-                    'where upper(soccer02.player.name) like \'%' + search_string.upper() + '%\'and event_type like \'shoton\' ' \
-                    'and pos_x is not null and pos_y is not null and player.name is not null and player_id is not null ' \
-                    'and player_player_id is not null'
-        #print(statement)
-        con.cur.execute(statement)
-        res = con.cur.fetchall()
-        #pprint(res)
-        return res
-
-    # shot off
-    def player_heatmap_shotoff(self, player_name):
-        search_string = '' + player_name
-        con = Connection()
-        statement = 'select pos_x, pos_y ' \
-                    'from soccer02.player ' \
-                    'join soccer02.matchevent on soccer02.player.player_id = soccer02.matchevent.player_player_id ' \
-                    'where upper(soccer02.player.name) like \'%' + search_string.upper() + '%\'and event_type like \'shotoff\' ' \
-                    'and pos_x is not null and pos_y is not null and player.name is not null and player_id is not null ' \
-                    'and player_player_id is not null'
-        #print(statement)
-        con.cur.execute(statement)
-        res = con.cur.fetchall()
-        #pprint(res)
-        return res
 
     def search_matches_by_team_id(self, team_id):
         search_string = '\'' + team_id + '\''
@@ -222,6 +142,19 @@ class DB_Factory:
                     'where match_match_id = ' + match_id + '' \
                     'and event_type = \'' + event_type + '\'' \
                     'and pos_x is not null and pos_y is not null'
+        con.cur.execute(statement)
+        res = con.cur.fetchall()
+        return res
+
+    # Get heatmap data for a match based on given match_id and event_type
+    def player_heatmap(self, player_name, event_type):
+        con = Connection()
+        statement = 'select pos_x, pos_y ' \
+                    'from soccer02.player ' \
+                    'join soccer02.matchevent on soccer02.player.player_id = soccer02.matchevent.player_player_id ' \
+                    'where upper(soccer02.player.name) = \'' + player_name.upper() + '\' and event_type = \'' + event_type + '\' ' \
+                    'and pos_x is not null and pos_y is not null and player.name is not null and player_id is not null ' \
+                    'and player_player_id is not null'
         con.cur.execute(statement)
         res = con.cur.fetchall()
         return res
