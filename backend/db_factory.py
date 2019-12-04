@@ -37,7 +37,7 @@ class DB_Factory:
         con = Connection()
         statement = 'select distinct * from soccer02.matchevent ' \
                     'where upper(event_type) like \'%' + search_string.upper() + '%\' ' \
-		    'and pos_x is not null and pos_y is not null;'
+		            'and pos_x is not null and pos_y is not null;'
         con.cur.execute(statement)
         res = con.cur.fetchall()
         return res
@@ -57,8 +57,8 @@ class DB_Factory:
     def list_all_matches(self):
         con = Connection()
         statement = 'select distinct "date", result, home_team_goal, away_team_goal from soccer02.match ' \
-		    'where "date" is not null and result is not null and home_team_goal is not null ' \
-		    'and away_team_goal is not null;'
+		        'where "date" is not null and result is not null and home_team_goal is not null ' \
+		        'and away_team_goal is not null;'
         con.cur.execute(statement)
         res_tupel = con.cur.fetchall()
         res_string_list = [str(i[0]) for i in res_tupel]
@@ -72,8 +72,8 @@ class DB_Factory:
         statement = 'select player.name, match.result from soccer02.player, soccer02.match ' \
                     'inner join soccer02.match on team.team_id = match.team_awayteam_id ' \
                     'where upper(long_name) like \'%' + home_team_name + '%\' and date = \'' + date + '\' ' \
-		    'and player.name is not null and match.result is not null and team.team_id is not null ' \
-		    'and match.team_awayteam_id is not null;'
+		            'and player.name is not null and match.result is not null and team.team_id is not null ' \
+		            'and match.team_awayteam_id is not null;'
         con.cur.execute(statement)
         res = con.cur.fetchall()
         con.close()
@@ -96,7 +96,7 @@ class DB_Factory:
         search_string = '' + player_name
         con = Connection()
         statement = 'select name from soccer02.player where upper(name) like \'%' + search_string.upper() + '%\' ' \
-		    'and name is not null;'
+		            'and name is not null;'
         con.cur.execute(statement)
         res_tupel = con.cur.fetchall()
         con.close()
@@ -108,8 +108,8 @@ class DB_Factory:
         statement = 'select team.long_name, match.result from soccer02.team ' \
                     'inner join soccer02.match on team.team_id = match.team_hometeam_id ' \
                     'where upper(long_name) like \'%' + search_string.upper() + '%\' ' \
-		    'and team.long_name is not null and match.result is not null and team_id is not null ' \
-		    'and team_hometeam_id is not null;'
+		            'and team.long_name is not null and match.result is not null and team_id is not null ' \
+		            'and team_hometeam_id is not null;'
         con.cur.execute(statement)
         res = con.cur.fetchall()
         con.close()
@@ -121,8 +121,8 @@ class DB_Factory:
         statement = 'select team.long_name, match.result from soccer02.team ' \
                     'inner join soccer02.match on team.team_id = match.team_awayteam_id ' \
                     'where upper(long_name) like \'%' + search_string.upper() + '%\' ' \
-		    'and long_name is not null and result is not null and team_id is not null ' \
-		    'and team_awayteam_id is not null;'
+		            'and long_name is not null and result is not null and team_id is not null ' \
+		            'and team_awayteam_id is not null;'
         con.cur.execute(statement)
         res = con.cur.fetchall()
         con.close()
@@ -136,8 +136,8 @@ class DB_Factory:
                     'from soccer02.player ' \
                     'join soccer02.matchevent on soccer02.player.player_id = soccer02.matchevent.player_player_id ' \
                     'where upper(soccer02.player.name) like \'%' + search_string.upper() + '%\'and event_type like \'foulcommit\' ' \
-		    'and pos_x is not null and pos_y is not null and player.name is not null and player_id is not null ' \
-		    'and player_player_id is not null'
+		            'and pos_x is not null and pos_y is not null and player.name is not null and player_id is not null ' \
+		            'and player_player_id is not null'
         con.cur.execute(statement)
         res = con.cur.fetchall()
         return res
