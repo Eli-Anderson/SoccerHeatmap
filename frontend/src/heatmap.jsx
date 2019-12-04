@@ -1,9 +1,11 @@
-import React, { useRef, useEffect, useCallback } from "react";
+import React, { useRef, useEffect, useCallback, useState } from "react";
 import h337 from "heatmap.js";
-import { LinearProgress, Fade, Typography } from "@material-ui/core";
+import { LinearProgress, Fade, Typography, Slider } from "@material-ui/core";
 
 export const Heatmap = props => {
     const containerRef = useRef();
+
+    const [max, setMax] = useState(2);
 
     // data stores the filtered data: the data we want to visualize
     // we must change our visualization whenever data changes
@@ -31,32 +33,44 @@ export const Heatmap = props => {
                     value: point.value
                 }));
                 heatmap.setData({
-                    max: 2,
+                    max,
                     data: formattedData
                 });
             } else {
                 heatmap.setData({
-                    max: 1,
+                    max,
                     data: []
                 });
             }
         }
-    }, [props.data]);
+    }, [props.data, max]);
 
     return (
-        <div style={{ width: "100%", height: "100%" }}>
-            {!props.data.length && !props.loading && (
-                <Typography>No Data Available</Typography>
-            )}
-            <Fade in={props.loading}>
-                <LinearProgress style={{ height: 6 }} variant="query" />
-            </Fade>
-            <div ref={containerRef}>
-                <img
-                    onLoad={() => initializeHeatmap()}
-                    src="field.svg"
-                    alt=""
-                />
+        <div>
+            <Typography>Intensity</Typography>
+            <Slider
+                min={1}
+                max={19}
+                marks={true}
+                step={1}
+                valueLabelDisplay="auto"
+                value={max}
+                onChange={(ev, value) => setMax(value)}
+            />
+            <div style={{ width: "100%", height: "100%" }}>
+                {!props.data.length && !props.loading && (
+                    <Typography>No Data Available</Typography>
+                )}
+                <Fade in={props.loading}>
+                    <LinearProgress style={{ height: 6 }} variant="query" />
+                </Fade>
+                <div ref={containerRef}>
+                    <img
+                        onLoad={() => initializeHeatmap()}
+                        src="field.svg"
+                        alt=""
+                    />
+                </div>
             </div>
         </div>
     );

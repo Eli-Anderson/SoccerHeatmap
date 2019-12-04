@@ -94,10 +94,10 @@ def match(home_team, away_team, date):
     return result
 
 
-@app.route("/matches/<team_id>")
+@app.route("/matches/<team_id>/<event_type>")
 @cache.cached(timeout=5000)
-def get_matches_by_team_id(team_id):
-    dummy = db.search_matches_by_team_id(team_id)
+def get_matches_by_team_id(team_id, event_type):
+    dummy = db.search_matches_by_team_id(team_id, event_type)
     result = json.dumps(dummy, default=str)
     return result
 
@@ -113,6 +113,20 @@ def get_heatmap_data_for_player(player_name, event_type):
 @cache.cached(timeout=5000)
 def get_heatmap_data_for_match(match_id, event_type):
     dummy = db.match_heatmap(match_id, event_type)
+    result = json.dumps(dummy, default=str)
+    return result
+
+@app.route("/team/<team_id>/<event_type>")
+@cache.cached(timeout=5000)
+def get_heatmap_data_for_team(team_id, event_type):
+    dummy = db.team_heatmap(team_id, event_type)
+    result = json.dumps(dummy, default=str)
+    return result
+
+@app.route("/lists/teamsWithEvents")
+@cache.cached(timeout=5000)
+def get_teams_with_events():
+    dummy = db.list_teams_with_events()
     result = json.dumps(dummy, default=str)
     return result
 

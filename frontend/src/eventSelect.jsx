@@ -16,6 +16,17 @@ const useStyles = makeStyles({
     }
 });
 
+const eventLabels = {
+    throwin: "Throw in",
+    foulcommit: "Foul",
+    cross: "Cross",
+    shotoff: "Shot off",
+    shoton: "Shot on",
+    card: "Card",
+    goal: "Goal",
+    corner: "Corner"
+};
+
 export const EventSelect = props => {
     const classes = useStyles(props);
 
@@ -38,7 +49,7 @@ export const EventSelect = props => {
                     </option>
                     {props.data.map(x => (
                         <option key={x} value={x}>
-                            {x}
+                            {eventLabels[x]}
                         </option>
                     ))}
                 </NativeSelect>

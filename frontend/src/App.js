@@ -11,7 +11,6 @@ import {
     Radio
 } from "@material-ui/core";
 import { EventSelect } from "./eventSelect";
-import { PlayerSelect } from "./playerSelect";
 import { useState } from "react";
 import { Heatmap } from "./heatmap";
 import { MatchSelect } from "./matchSelect";
@@ -46,44 +45,57 @@ function App(props) {
     const [loading, setLoading] = useState(false);
     const [eventTypes, setEventTypes] = useState([]);
     const [teams, setTeams] = useState([]);
+    const [allTeams, setAllTeams] = useState([]);
     const [matches, setMatches] = useState([]);
-    const [players, setPlayers] = useState([]);
 
     const [searchType, setSearchType] = useState("player");
 
     useEffect(() => {
         fetch("http://localhost:3001/lists/allTeams")
             .then(response => response.json())
-            .then(d => d.sort((a, b) => (a[1] < b[1] ? -1 : 1)))
+            .then(d => d.sort((a, b) => (a[1] < b[1] ? -1 : 1))) // sort alphabetically by name
+            .then(setAllTeams)
+            .catch(error => console.error(error));
+        fetch("http://localhost:3001/lists/teamsWithEvents")
+            .then(response => response.json())
+            .then(d => d.sort((a, b) => (a[1] < b[1] ? -1 : 1))) // sort alphabetically by name
             .then(setTeams)
             .catch(error => console.error(error));
+
         // get the list of Event Types
         fetch("http://localhost:3001/lists/allEventTypes")
             .then(response => response.json())
             .then(removeDuplicates)
-            .then(setEventTypes)
-            .catch(error => console.error(error));
-        // get the list of all Players
-        fetch("http://localhost:3001/lists/allPlayers")
-            .then(response => response.json())
             .then(d => d.sort()) // sort alphabetically
-            .then(setPlayers)
+            .then(setEventTypes)
             .catch(error => console.error(error));
     }, []);
 
     useEffect(() => {
-        if (team && team !== "none") {
+        if (
+            searchType === "match" &&
+            team &&
+            team !== "none" &&
+            event &&
+            event !== "none"
+        ) {
             // get matches for team
-            fetch("http://localhost:3001/matches/" + team)
+            fetch(`http://localhost:3001/matches/${team}/${event}`)
                 .then(response => response.json())
                 .then(d => d.sort((a, b) => (a[5] < b[5] ? 1 : -1))) // sort by date (new -> old)
                 .then(setMatches)
                 .catch(error => console.error(error));
         }
-    }, [team]);
+    }, [team, searchType, event]);
 
     useEffect(() => {
-        if (event && event !== "none" && player && player !== "none") {
+        if (
+            searchType === "player" &&
+            event &&
+            event !== "none" &&
+            player &&
+            player !== "none"
+        ) {
             let url = `http://localhost:3001/player/${player}/${event}`;
             setLoading(true);
             fetch(url)
@@ -97,13 +109,19 @@ function App(props) {
         } else {
             setData([]);
         }
-    }, [player, event]);
+    }, [player, event, searchType]);
 
     /* Fetch heatmap data based on match_id */
 
-    /* uncomment when API is implemented for this endpoint */
     useEffect(() => {
-        if (event && team && team !== "none" && match && match !== "none") {
+        if (
+            searchType === "match" &&
+            event &&
+            team &&
+            team !== "none" &&
+            match &&
+            match !== "none"
+        ) {
             let url = `http://localhost:3001/match/${match}/${event}`;
             setLoading(true);
             fetch(url)
@@ -115,7 +133,22 @@ function App(props) {
                 .then(setData)
                 .then(() => setLoading(false));
         }
-    }, [team, event, match]);
+    }, [team, event, match, searchType]);
+
+    useEffect(() => {
+        if (searchType === "team" && event && team && team !== "none") {
+            let url = `http://localhost:3001/team/${team}/${event}`;
+            setLoading(true);
+            fetch(url)
+                .then(response => response.json())
+                .then(json =>
+                    // flip the x, y !!!
+                    json.map(p => ({ x: p[1], y: p[0], value: 1 }))
+                )
+                .then(setData)
+                .then(() => setLoading(false));
+        }
+    }, [team, event, match, searchType]);
 
     return (
         <div className={"App " + classes.app}>
@@ -155,6 +188,11 @@ function App(props) {
                                         }
                                     >
                                         <FormControlLabel
+                                            value="team"
+                                            control={<Radio />}
+                                            label="Team"
+                                        />
+                                        <FormControlLabel
                                             value="player"
                                             control={<Radio />}
                                             label="Player"
@@ -172,7 +210,17 @@ function App(props) {
                                     <PlayerSearch
                                         value={player}
                                         onChange={p => setPlayer(p)}
-                                        data={players}
+                                    />
+                                </Grid>
+                            )}
+                            {searchType === "team" && (
+                                <Grid item>
+                                    <TeamSelect
+                                        value={team}
+                                        onChange={ev =>
+                                            setTeam(ev.target.value)
+                                        }
+                                        data={teams}
                                     />
                                 </Grid>
                             )}
@@ -196,6 +244,7 @@ function App(props) {
                                             team={team}
                                             data={matches}
                                             teams={teams}
+                                            allTeams={allTeams}
                                         />
                                     </Grid>
                                 </>
