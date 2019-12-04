@@ -46,5 +46,3 @@ print(type(liste2))
 print(liste2[0])
 print(type(liste2[0]))
 """
-
-db.close()
