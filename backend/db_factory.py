@@ -129,3 +129,20 @@ class DB_Factory:
 
     def close(self):
         self.connection.close()
+
+    # For the machine-learning-module.
+    def all_foulcommits(self):
+        con = Connection()
+        statement = 'select * from matchevent ' \
+                    'where event_type like \'foulcommit\' ' \
+                    'and team_team_id is not null '\
+                    'and player_player_id is not null '\
+                    'and match_match_id is not null '\
+                    'and matchevent_id is not null '\
+                    'and pos_x is not null '\
+                    'and pos_y is not null '\
+                    'and elapsed is not null '\
+                    'and rownum <= 80000'
+        con.cur.execute(statement)
+        res = con.cur.fetchall()
+        return res
