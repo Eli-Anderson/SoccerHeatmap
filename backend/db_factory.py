@@ -24,20 +24,6 @@ class DB_Factory:
         con.close()
         return res
 
-
-    def search_team(self, team_name):
-        search_string = '' + team_name
-        con = Connection()
-        statement = 'select long_name, short_name from soccer02.team where upper(long_name) like \'%' + search_string.upper() + '%\' ' \
-		    'and long_name is not null and short_name is not null'
-        con.cur.execute(statement)
-        res_tupel = con.cur.fetchall()
-        print("#### Type: ", type(res_tupel))
-        print("#### Result: ", res_tupel)
-        print("#### 1. Element of the tuple: ", res_tupel[0][0])
-        con.close()
-        return res_tupel
-
     # Returns all matchevents as a string-list
     def list_all_events(self):
         con = Connection()
@@ -183,6 +169,23 @@ class DB_Factory:
                     'where team_team_id = ' + team_id + '' \
                     'and event_type = \'' + event_type + '\'' \
                     'and pos_x is not null and pos_y is not null'
+        con.cur.execute(statement)
+        res = con.cur.fetchall()
+        return res
+
+    # For the machine-learning-module.
+    def all_foulcommits(self):
+        con = Connection()
+        statement = 'select * from matchevent ' \
+                    'where event_type like \'foulcommit\' ' \
+                    'and team_team_id is not null '\
+                    'and player_player_id is not null '\
+                    'and match_match_id is not null '\
+                    'and matchevent_id is not null '\
+                    'and pos_x is not null '\
+                    'and pos_y is not null '\
+                    'and elapsed is not null '\
+                    'and rownum <= 80000'
         con.cur.execute(statement)
         res = con.cur.fetchall()
         return res
