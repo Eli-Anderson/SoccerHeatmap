@@ -130,7 +130,7 @@ class DB_Factory:
     def close(self):
         self.connection.close()
 
-    # For the machine-learning-module.
+    # For the machine-learning-module. 
     def all_foulcommits(self):
         con = Connection()
         statement = 'select * from matchevent ' \
