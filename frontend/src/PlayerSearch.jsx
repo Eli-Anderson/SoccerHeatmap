@@ -5,73 +5,103 @@ import {
     InputLabel,
     MenuItem,
     MenuList,
-    Fade
+    Fade,
+    Box
 } from "@material-ui/core";
-import _ from "lodash";
 
 import { useFocus } from "web-api-hooks";
+import { makeStyles } from "@material-ui/styles";
 
-export const PlayerSearch = props => {
+const useStyles = makeStyles({
+    input: {
+        minWidth: 220
+    },
+    menu: {
+        minWidth: 220,
+        position: "absolute",
+        zIndex: 9999,
+        backgroundColor: "white",
+        top: 60,
+        maxHeight: 500,
+        overflow: "scroll",
+        boxShadow: "0px 0px 20px 2px #666",
+        borderRadius: "0.25rem"
+    }
+});
+
+export const PlayerSearch = ({ onChange, event, ...props }) => {
+    const classes = useStyles(props);
+
     const [value, setValue] = useState("");
     const [data, setData] = useState([]);
+    const [allPlayers, setAllPlayers] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const [isFocused, bindFocus] = useFocus();
 
     const inputRef = useRef(null);
 
-    const attemptSearch = useRef(
-        _.throttle(
-            search => {
-                fetch("http://localhost:3001/search/players/" + search)
-                    .then(r => r.json())
-                    .then(d => setData(d.map(([x]) => x)));
-            },
-            500,
-            { trailing: true, leading: false }
-        )
-    );
+    useEffect(() => {
+        if (value) {
+            setData(allPlayers.filter(p => p.includes(value)));
+        }
+    }, [value, allPlayers]);
 
     useEffect(() => {
-        if (value && attemptSearch.current) {
-            attemptSearch.current(value);
-        }
-    }, [value]);
+        setLoading(true);
+        fetch(`http://localhost:3001/search/players/${event}`)
+            .then(r => r.json())
+            .then(d => {
+                const names = d.map(([x]) => x);
+                setAllPlayers(names);
+                setValue("");
+                setData(names);
+            })
+            .then(() => setLoading(false));
+    }, [event]);
 
     return (
         <FormControl>
-            <InputLabel htmlFor="player">Player</InputLabel>
+            <InputLabel htmlFor="player">
+                {loading ? "Loading..." : "Search for a player"}
+            </InputLabel>
             <Input
+                classes={{ root: classes.input }}
                 ref={inputRef}
                 value={value}
                 onChange={ev => {
                     setValue(ev.target.value);
                 }}
+                disabled={loading || !event || event === "none"}
                 {...bindFocus}
             />
-            <Fade in={data.length > 0 && isFocused}>
-                <MenuList
-                    style={{
-                        position: "absolute",
-                        zIndex: 9999,
-                        backgroundColor: "white",
-                        top: 60,
-                        maxHeight: 500,
-                        overflow: "scroll",
-                        boxShadow: "0px 0px 20px 2px #666",
-                        borderRadius: "0.25rem"
-                    }}
-                >
-                    {data.map((x, i) => (
+            <Fade in={isFocused}>
+                <MenuList classes={{ root: classes.menu }}>
+                    {data.slice(0, 30).map((x, i) => (
                         <MenuItem
                             key={i}
                             onClick={() => {
-                                props.onChange(x);
+                                onChange(x);
                                 setValue(x);
                             }}
                         >
                             {x}
                         </MenuItem>
                     ))}
+                    {data.length > 30 && (
+                        <MenuItem disabled>
+                            <Box width="100%" textAlign="center">
+                                {`${data.length - 30} more`}
+                            </Box>
+                        </MenuItem>
+                    )}
+                    {data.length === 0 && (
+                        <MenuItem disabled>
+                            <Box width="100%" textAlign="center">
+                                No data found
+                            </Box>
+                        </MenuItem>
+                    )}
                 </MenuList>
             </Fade>
         </FormControl>

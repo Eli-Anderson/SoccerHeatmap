@@ -1,6 +1,12 @@
 import React, { useRef, useEffect, useCallback, useState } from "react";
 import h337 from "heatmap.js";
-import { LinearProgress, Fade, Typography, Slider } from "@material-ui/core";
+import {
+    LinearProgress,
+    Fade,
+    Typography,
+    Slider,
+    Box
+} from "@material-ui/core";
 
 export const Heatmap = props => {
     const containerRef = useRef();
@@ -59,7 +65,9 @@ export const Heatmap = props => {
             />
             <div style={{ width: "100%", height: "100%" }}>
                 {!props.data.length && !props.loading && (
-                    <Typography>No Data Available</Typography>
+                    <Box textAlign="center">
+                        <Typography>No Data Available</Typography>
+                    </Box>
                 )}
                 <Fade in={props.loading}>
                     <LinearProgress style={{ height: 6 }} variant="query" />

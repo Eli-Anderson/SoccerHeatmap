@@ -49,14 +49,15 @@ def teamMatches(team_name):
     result = json.dumps(dummy)
     return result
 
-""" Returns all players with contained name.
-:param team_name: The name of the team as a string.
-:returns: Result as JSON.
+""" Returns all players with with data in the matchevent table associated with the
+given event_type.
+:param event_type: The event type ID.
+:returns: Result as an Array.
 """
-@app.route("/search/players/<player_name>")
+@app.route("/search/players/<event_type>")
 @cache.cached(timeout=5000)
-def searchPlayers(player_name):
-    dummy = db.search_player(player_name)
+def getPlayersWithEvent(event_type):
+    dummy = db.get_players_with_event(event_type)
     result = json.dumps(dummy)
     return result
 

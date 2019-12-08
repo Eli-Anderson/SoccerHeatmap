@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import "./App.css";
+// import "./App.css";
 import { TeamSelect } from "./teamSelect";
 import {
     Grid,
@@ -8,13 +8,15 @@ import {
     FormLabel,
     RadioGroup,
     FormControlLabel,
-    Radio
+    Radio,
+    Box
 } from "@material-ui/core";
 import { EventSelect } from "./eventSelect";
 import { useState } from "react";
 import { Heatmap } from "./heatmap";
 import { MatchSelect } from "./matchSelect";
 import { PlayerSearch } from "./PlayerSearch";
+import { DataInfo } from "./DataInfo";
 
 // define our styles here. this transforms css styles to a class so it is easier to apply
 const useStyles = makeStyles({
@@ -208,7 +210,7 @@ function App(props) {
                             {searchType === "player" && (
                                 <Grid item>
                                     <PlayerSearch
-                                        value={player}
+                                        event={event}
                                         onChange={p => setPlayer(p)}
                                     />
                                 </Grid>
@@ -217,15 +219,16 @@ function App(props) {
                                 <Grid item>
                                     <TeamSelect
                                         value={team}
-                                        onChange={ev =>
-                                            setTeam(ev.target.value)
-                                        }
+                                        onChange={ev => {
+                                            setTeam(ev.target.value);
+                                            setMatch("none");
+                                        }}
                                         data={teams}
                                     />
                                 </Grid>
                             )}
                             {searchType === "match" && (
-                                <>
+                                <React.Fragment>
                                     <Grid item>
                                         <TeamSelect
                                             value={team}
@@ -247,17 +250,16 @@ function App(props) {
                                             allTeams={allTeams}
                                         />
                                     </Grid>
-                                </>
+                                </React.Fragment>
                             )}
                         </Grid>
                     </Grid>
                 </Grid>
 
-                <Grid container className={classes.content} justify="center">
-                    <Grid item>
-                        <Heatmap data={data} loading={loading} />
-                    </Grid>
-                </Grid>
+                <Box display="flex" justifyContent="center" marginTop="30px">
+                    <Heatmap data={data} loading={loading} />
+                    <DataInfo data={data} />
+                </Box>
             </div>
         </div>
     );

@@ -41,7 +41,7 @@ class DB_Factory:
     # Returns all matchevents as a string-list
     def list_all_events(self):
         con = Connection()
-        statement = 'select distinct event_type from soccer02.matchevent where event_type is not null'
+        statement = 'select distinct event_type from soccer02.matchevent where event_type is not null and pos_x is not null and pos_y is not null'
         con.cur.execute(statement)
         res_tupel = con.cur.fetchall()
         res_string_list = [str(i[0]) for i in res_tupel]
@@ -116,11 +116,21 @@ class DB_Factory:
         con.close()
         return res_tupel
 
-    def search_player(self, player_name):
-        search_string = '' + player_name
+    def get_players_with_event(self, event_type):
+        event_type_str = '\''+ event_type + '\''
         con = Connection()
-        statement = 'select name from soccer02.player where upper(name) like \'%' + search_string.upper() + '%\' ' \
-		    'and name is not null and rownum <= 30'
+        statement = 'select name, player_id from soccer02.player where name is not null and player_id in (select player_player_id from soccer02.matchevent where player_player_id = player_id and pos_x is not null and pos_y is not null and event_type = '+ event_type_str +')'
+        con.cur.execute(statement)
+        res_tupel = con.cur.fetchall()
+        con.close()
+        return res_tupel
+
+    def search_player_with_event(self, player_name, event_type):
+        search_string = '' + player_name
+        event_type_str = '\''+ event_type + '\''
+        con = Connection()
+        statement = 'select name, player_id from soccer02.player where upper(name) like \'%' + search_string.upper() + '%\' ' \
+		    'and name is not null and player_id in (select player_player_id from soccer02.matchevent where player_player_id = player_id and pos_x is not null and pos_y is not null and event_type = '+ event_type_str +') and rownum <= 30'
         con.cur.execute(statement)
         res_tupel = con.cur.fetchall()
         con.close()
