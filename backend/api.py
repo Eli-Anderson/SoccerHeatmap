@@ -132,6 +132,16 @@ def get_teams_with_events():
     return result
 
 """
+    Get player by ID
+"""
+@app.route("/player/<player_id>")
+@cache.cached(timeout=5000)
+def get_player_by_id(player_id):
+    dummy = db.get_player_by_id(player_id)
+    result = json.dumps(dummy, default=str)
+    return result
+
+"""
 Running service.
 """
 app.run(port=3001, debug = True, threaded=True)

@@ -102,10 +102,33 @@ function App(props) {
             setLoading(true);
             fetch(url)
                 .then(response => response.json())
-                .then(json =>
+                .then(json => {
                     // flip the x, y !!!
-                    json.map(p => ({ x: p[1], y: p[0], value: 1 }))
-                )
+                    return json.map(
+                        ([
+                            y,
+                            x,
+                            comment,
+                            subType,
+                            teamID,
+                            playerID,
+                            venue,
+                            injuryTime,
+                            goalType
+                        ]) => ({
+                            x,
+                            y,
+                            value: 1,
+                            comment,
+                            subType,
+                            teamID,
+                            playerID,
+                            venue,
+                            injuryTime,
+                            goalType
+                        })
+                    );
+                })
                 .then(setData)
                 .then(() => setLoading(false));
         } else {
@@ -257,7 +280,11 @@ function App(props) {
                 </Grid>
 
                 <Box display="flex" justifyContent="center" marginTop="30px">
-                    <Heatmap data={data} loading={loading} />
+                    <Heatmap
+                        data={data}
+                        loading={loading}
+                        allTeams={allTeams}
+                    />
                     <DataInfo data={data} />
                 </Box>
             </div>

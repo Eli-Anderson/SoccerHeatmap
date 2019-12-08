@@ -62,6 +62,12 @@ class DB_Factory:
         res = con.cur.fetchall()
         return res
 
+    def get_player_by_id(self, player_id):
+        con = Connection()
+        statement = 'select * from soccer02.player where player_id = ' + player_id
+        con.cur.execute(statement)
+        res = con.cur.fetchall()
+        return res
 
     # Returns all matches as a string-list
     def list_all_matches(self):
@@ -151,7 +157,7 @@ class DB_Factory:
     # Get heatmap data for a match based on given player_name and event_type
     def player_heatmap(self, player_name, event_type):
         con = Connection()
-        statement = 'select pos_x, pos_y ' \
+        statement = 'select pos_x, pos_y, "comment", sub_type, team_team_id, player_player_id, venue, injury_time, goal_type ' \
                     'from soccer02.player ' \
                     'join soccer02.matchevent on soccer02.player.player_id = soccer02.matchevent.player_player_id ' \
                     'where upper(soccer02.player.name) = \'' + player_name.upper() + '\' and event_type = \'' + event_type + '\' ' \
