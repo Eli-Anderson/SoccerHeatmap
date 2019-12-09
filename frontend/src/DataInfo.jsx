@@ -6,8 +6,10 @@ export const DataInfo = ({ data }) => {
         <Box display="flex" alignItems="center">
             <Box margin="16px">
                 <Box>
-                    <Typography component="span">Count: </Typography>
-                    <Typography component="span">{data.length}</Typography>
+                    <Typography component="span">Events: </Typography>
+                    <Typography component="span" color="primary">
+                        {data.length}
+                    </Typography>
                 </Box>
             </Box>
         </Box>

@@ -145,7 +145,9 @@ class DB_Factory:
     # Get heatmap data for a match based on given match_id and event_type
     def match_heatmap(self, match_id, event_type):
         con = Connection()
-        statement = 'select pos_x, pos_y ' \
+        statement = 'select pos_x, pos_y, "comment", ' \
+                    'sub_type, team_team_id, player_player_id, ' \
+                    'venue, injury_time, goal_type ' \
                     'from soccer02.matchevent ' \
                     'where match_match_id = ' + match_id + '' \
                     'and event_type = \'' + event_type + '\'' \
@@ -157,7 +159,9 @@ class DB_Factory:
     # Get heatmap data for a match based on given player_id and event_type
     def player_heatmap(self, player_id, event_type):
         con = Connection()
-        statement = 'select pos_x, pos_y, "comment", sub_type, team_team_id, player_player_id, venue, injury_time, goal_type ' \
+        statement = 'select pos_x, pos_y, "comment", ' \
+                    'sub_type, team_team_id, player_player_id, ' \
+                    'venue, injury_time, goal_type ' \
                     'from soccer02.matchevent where player_player_id = \'' + player_id + '\' and event_type = \'' + event_type + '\' ' \
                     'and pos_x is not null and pos_y is not null and player_player_id is not null'
         con.cur.execute(statement)
@@ -167,7 +171,9 @@ class DB_Factory:
     # Get heatmap data for a match based on given team_id and event_type
     def team_heatmap(self, team_id, event_type):
         con = Connection()
-        statement = 'select pos_x, pos_y ' \
+        statement = 'select pos_x, pos_y, "comment", ' \
+                    'sub_type, team_team_id, player_player_id, ' \
+                    'venue, injury_time, goal_type ' \
                     'from soccer02.matchevent ' \
                     'where team_team_id = ' + team_id + '' \
                     'and event_type = \'' + event_type + '\'' \

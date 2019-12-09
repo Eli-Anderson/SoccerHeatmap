@@ -75,6 +75,7 @@ export const Heatmap = ({ data, loading, allTeams, ...props }) => {
                         }));
                     if (events.length) {
                         setLoadingClickedEvents(true);
+                        console.log(events);
                         Promise.all(
                             events.map(d =>
                                 fetch(

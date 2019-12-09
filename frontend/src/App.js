@@ -153,7 +153,30 @@ function App(props) {
                 .then(response => response.json())
                 .then(json =>
                     // flip the x, y !!!
-                    json.map(p => ({ x: p[1], y: p[0], value: 1 }))
+                    json.map(
+                        ([
+                            y,
+                            x,
+                            comment,
+                            subType,
+                            teamID,
+                            playerID,
+                            venue,
+                            injuryTime,
+                            goalType
+                        ]) => ({
+                            x,
+                            y,
+                            value: 1,
+                            comment,
+                            subType,
+                            teamID,
+                            playerID,
+                            venue,
+                            injuryTime,
+                            goalType
+                        })
+                    )
                 )
                 .then(setData)
                 .then(() => setLoading(false));
@@ -168,7 +191,30 @@ function App(props) {
                 .then(response => response.json())
                 .then(json =>
                     // flip the x, y !!!
-                    json.map(p => ({ x: p[1], y: p[0], value: 1 }))
+                    json.map(
+                        ([
+                            y,
+                            x,
+                            comment,
+                            subType,
+                            teamID,
+                            playerID,
+                            venue,
+                            injuryTime,
+                            goalType
+                        ]) => ({
+                            x,
+                            y,
+                            value: 1,
+                            comment,
+                            subType,
+                            teamID,
+                            playerID,
+                            venue,
+                            injuryTime,
+                            goalType
+                        })
+                    )
                 )
                 .then(setData)
                 .then(() => setLoading(false));
