@@ -111,7 +111,7 @@ class DB_Factory:
     def get_players_with_event(self, event_type):
         event_type_str = '\''+ event_type + '\''
         con = Connection()
-        statement = 'select name, player_id from soccer02.player where name is not null and player_id in (select player_player_id from soccer02.matchevent where player_player_id = player_id and pos_x is not null and pos_y is not null and event_type = '+ event_type_str +')'
+        statement = 'select player_id, name from soccer02.player where name is not null and player_id in (select player_player_id from soccer02.matchevent where player_player_id = player_id and pos_x is not null and pos_y is not null and event_type = '+ event_type_str +')'
         con.cur.execute(statement)
         res_tupel = con.cur.fetchall()
         con.close()
@@ -154,15 +154,12 @@ class DB_Factory:
         res = con.cur.fetchall()
         return res
 
-    # Get heatmap data for a match based on given player_name and event_type
-    def player_heatmap(self, player_name, event_type):
+    # Get heatmap data for a match based on given player_id and event_type
+    def player_heatmap(self, player_id, event_type):
         con = Connection()
         statement = 'select pos_x, pos_y, "comment", sub_type, team_team_id, player_player_id, venue, injury_time, goal_type ' \
-                    'from soccer02.player ' \
-                    'join soccer02.matchevent on soccer02.player.player_id = soccer02.matchevent.player_player_id ' \
-                    'where upper(soccer02.player.name) = \'' + player_name.upper() + '\' and event_type = \'' + event_type + '\' ' \
-                    'and pos_x is not null and pos_y is not null and player.name is not null and player_id is not null ' \
-                    'and player_player_id is not null'
+                    'from soccer02.matchevent where player_player_id = \'' + player_id + '\' and event_type = \'' + event_type + '\' ' \
+                    'and pos_x is not null and pos_y is not null and player_player_id is not null'
         con.cur.execute(statement)
         res = con.cur.fetchall()
         return res

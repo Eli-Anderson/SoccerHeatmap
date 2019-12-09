@@ -36,6 +36,7 @@ export const PlayerSearch = ({ onChange, event, ...props }) => {
     const [data, setData] = useState([]);
     const [allPlayers, setAllPlayers] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [selected, setSelected] = useState(null);
 
     const [isFocused, bindFocus] = useFocus();
 
@@ -43,7 +44,11 @@ export const PlayerSearch = ({ onChange, event, ...props }) => {
 
     useEffect(() => {
         if (value) {
-            setData(allPlayers.filter(p => p.includes(value)));
+            setData(
+                allPlayers.filter(p =>
+                    p.name.toLowerCase().includes(value.toLowerCase())
+                )
+            );
         }
     }, [value, allPlayers]);
 
@@ -52,10 +57,10 @@ export const PlayerSearch = ({ onChange, event, ...props }) => {
         fetch(`http://localhost:3001/search/players/${event}`)
             .then(r => r.json())
             .then(d => {
-                const names = d.map(([x]) => x);
-                setAllPlayers(names);
+                const players = d.map(([id, name]) => ({ id, name }));
+                setAllPlayers(players);
                 setValue("");
-                setData(names);
+                setData(players);
             })
             .then(() => setLoading(false));
     }, [event]);
@@ -68,7 +73,8 @@ export const PlayerSearch = ({ onChange, event, ...props }) => {
             <Input
                 classes={{ root: classes.input }}
                 ref={inputRef}
-                value={value}
+                // if not focused, set value to the selected player name
+                value={isFocused ? value : selected ? selected.name : value}
                 onChange={ev => {
                     setValue(ev.target.value);
                 }}
@@ -77,15 +83,24 @@ export const PlayerSearch = ({ onChange, event, ...props }) => {
             />
             <Fade in={isFocused}>
                 <MenuList classes={{ root: classes.menu }}>
-                    {data.slice(0, 30).map((x, i) => (
+                    {data.slice(0, 30).map(p => (
                         <MenuItem
-                            key={i}
+                            key={p.id}
+                            value={p.id}
                             onClick={() => {
-                                onChange(x);
-                                setValue(x);
+                                onChange(p.id);
+                                setSelected(p);
                             }}
+                            style={
+                                selected && p.id === selected.id
+                                    ? {
+                                          backgroundColor: "#303f9f",
+                                          color: "white"
+                                      }
+                                    : null
+                            }
                         >
-                            {x}
+                            {p.name}
                         </MenuItem>
                     ))}
                     {data.length > 30 && (

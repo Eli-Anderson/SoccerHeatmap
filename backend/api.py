@@ -103,10 +103,10 @@ def get_matches_by_team_id(team_id, event_type):
     return result
 
 ################################################# Heatmap
-@app.route("/player/<player_name>/<event_type>")
+@app.route("/player/<player_id>/<event_type>")
 @cache.cached(timeout=5000)
-def get_heatmap_data_for_player(player_name, event_type):
-    dummy = db.player_heatmap(player_name, event_type)
+def get_heatmap_data_for_player(player_id, event_type):
+    dummy = db.player_heatmap(player_id, event_type)
     result = json.dumps(dummy, default=str)
     return result
 
