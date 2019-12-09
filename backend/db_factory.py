@@ -131,7 +131,7 @@ class DB_Factory:
         self.connection.close()
 
     # For the machine-learning-module. 
-    def all_foulcommits(self):
+    def foulcommits_training_data(self):
         statement = 'select elapsed, elapsed_plus, pos_x, pos_y, ' \
                     'event_type, sub_type, team_team_id, ' \
                     'player_player_id, match_match_id, card_type, venue, ' \
@@ -144,6 +144,25 @@ class DB_Factory:
                     'and pos_y is not null ' \
                     'and elapsed is not null ' \
                     'and matchevent_id <=2260000' \
+                    'order by matchevent_id desc'
+        self.connection.cursor.execute(statement)
+        res = self.connection.cursor.fetchall()
+        return res
+
+    # For the machine-learning-module. 
+    def foulcommits_testing_data(self):
+        statement = 'select elapsed, elapsed_plus, pos_x, pos_y, ' \
+                    'event_type, sub_type, team_team_id, ' \
+                    'player_player_id, match_match_id, card_type, venue, ' \
+                    'player_playerfouled, matchevent_id, ' \
+                    'matchevent_ext_id from matchevent ' \
+                    'where event_type like \'foulcommit\' ' \
+                    'and team_team_id is not null ' \
+                    'and player_player_id is not null ' \
+                    'and pos_x is not null ' \
+                    'and pos_y is not null ' \
+                    'and elapsed is not null ' \
+                    'and matchevent_id > 2260000' \
                     'order by matchevent_id desc'
         self.connection.cursor.execute(statement)
         res = self.connection.cursor.fetchall()
