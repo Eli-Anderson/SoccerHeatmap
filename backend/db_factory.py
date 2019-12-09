@@ -133,16 +133,18 @@ class DB_Factory:
     # For the machine-learning-module. 
     def all_foulcommits(self):
         con = Connection()
-        statement = 'select * from matchevent ' \
-                    'where event_type like \'foulcommit\' ' \
-                    'and team_team_id is not null '\
-                    'and player_player_id is not null '\
-                    'and match_match_id is not null '\
-                    'and matchevent_id is not null '\
-                    'and pos_x is not null '\
-                    'and pos_y is not null '\
-                    'and elapsed is not null '\
-                    'and rownum <= 80000'
+        statement = 'select elapsed, elapsed_plus, pos_x, pos_y, '
+                    'event_type, sub_type, team_team_id, '
+                    'player_player_id, match_match_id, card_type, venue, '
+                    'player_playerfouled, matchevent_id, '
+                    'matchevent_ext_id from matchevent '
+                    'where event_type like \'foulcommit\' '
+                    'and team_team_id is not null '
+                    'and player_player_id is not null '
+                    'and pos_x is not null '
+                    'and pos_y is not null '
+                    'and elapsed is not null '
+                    'and rownum <= 80000 '
         con.cur.execute(statement)
         res = con.cur.fetchall()
         return res
