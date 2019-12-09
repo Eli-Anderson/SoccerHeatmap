@@ -12,7 +12,7 @@ db = DB_Factory()
 #aber = Team(db.search_team("Aberdeen"))
 #print(aber)
 
-print(db.player_heatmap_fouls("Ander Capa"))
+print(db.all_foulcommits())
 
 ##################### TESTS ###############################
 
