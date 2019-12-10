@@ -9,28 +9,25 @@ class DB_Factory:
         # String translation in SQL Query
         statement = 'select distinct * from soccer02.team'
         con.cur.execute(statement)
-        res_tupel = con.cur.fetchall()
-        res_string_list = [str(i[0]) for i in res_tupel]
+        res = con.cur.fetchall()
         con.close()
-        return res_tupel
+        return res
 
-    def search_team(self, team_name):
-        search_string = '' + team_name
+    def list_teams_with_events(self):
         con = Connection()
-        statement = 'select long_name, short_name from soccer02.team where upper(long_name) like \'%' + search_string.upper() + '%\' ' \
-		    'and long_name is not null and short_name is not null'
+        # String translation in SQL Query
+        statement = 'select distinct * from soccer02.team ' \
+                    'where team_id in ' \
+                    '(select team_team_id from soccer02.matchevent where pos_x is not null and pos_y is not null group by team_team_id)'
         con.cur.execute(statement)
-        res_tupel = con.cur.fetchall()
-        print("#### Type: ", type(res_tupel))
-        print("#### Result: ", res_tupel)
-        print("#### 1. Element of the tuple: ", res_tupel[0][0])
+        res = con.cur.fetchall()
         con.close()
-        return res_tupel
+        return res
 
     # Returns all matchevents as a string-list
     def list_all_events(self):
         con = Connection()
-        statement = 'select distinct event_type from soccer02.matchevent where event_type is not null'
+        statement = 'select distinct event_type from soccer02.matchevent where event_type is not null and pos_x is not null and pos_y is not null'
         con.cur.execute(statement)
         res_tupel = con.cur.fetchall()
         res_string_list = [str(i[0]) for i in res_tupel]
@@ -39,7 +36,7 @@ class DB_Factory:
 
     def list_all_players(self):
         con = Connection()
-        statement = 'select name from soccer02.player where name is not null and rownum <= 500'
+        statement = 'select player_id, name from soccer02.player where name is not null'
         con.cur.execute(statement)
         res = con.cur.fetchall()
         con.close()
@@ -65,6 +62,12 @@ class DB_Factory:
         res = con.cur.fetchall()
         return res
 
+    def get_player_by_id(self, player_id):
+        con = Connection()
+        statement = 'select * from soccer02.player where player_id = ' + player_id
+        con.cur.execute(statement)
+        res = con.cur.fetchall()
+        return res
 
     # Returns all matches as a string-list
     def list_all_matches(self):
@@ -105,49 +108,35 @@ class DB_Factory:
         con.close()
         return res_tupel
 
-    def search_player(self, player_name):
-        search_string = '' + player_name
+    def get_players_with_event(self, event_type):
+        event_type_str = '\''+ event_type + '\''
         con = Connection()
-        statement = 'select name from soccer02.player where upper(name) like \'%' + search_string.upper() + '%\' ' \
-		    'and name is not null and rownum <= 30'
+        statement = 'select player_id, name from soccer02.player where name is not null and player_id in (select player_player_id from soccer02.matchevent where player_player_id = player_id and pos_x is not null and pos_y is not null and event_type = '+ event_type_str +')'
         con.cur.execute(statement)
         res_tupel = con.cur.fetchall()
         con.close()
         return res_tupel
 
-    def search_home_teams_matches(self, team_name):
-        search_string = '' + team_name
+    def search_player_with_event(self, player_name, event_type):
+        search_string = '' + player_name
+        event_type_str = '\''+ event_type + '\''
         con = Connection()
-        statement = 'select team.long_name, match.result from soccer02.team ' \
-                    'inner join soccer02.match on team.team_id = match.team_hometeam_id ' \
-                    'where upper(long_name) =\'' + search_string.upper() + '\'' \
-		    'and team.long_name is not null and match.result is not null and team_id is not null ' \
-		    'and team_hometeam_id is not null'
+        statement = 'select name, player_id from soccer02.player where upper(name) like \'%' + search_string.upper() + '%\' ' \
+		    'and name is not null and player_id in (select player_player_id from soccer02.matchevent where player_player_id = player_id and pos_x is not null and pos_y is not null and event_type = '+ event_type_str +') and rownum <= 30'
         con.cur.execute(statement)
-        res = con.cur.fetchall()
+        res_tupel = con.cur.fetchall()
         con.close()
-        return res
+        return res_tupel
 
-    def search_away_teams_matches(self, team_name):
-        search_string = '' + team_name
-        con = Connection()
-        statement = 'select team.long_name, match.result from soccer02.team ' \
-                    'inner join soccer02.match on team.team_id = match.team_awayteam_id ' \
-                    'where upper(long_name) like \'%' + search_string.upper() + '%\' ' \
-		                'and long_name is not null and result is not null and team_id is not null ' \
-		                'and team_awayteam_id is not null'
-        con.cur.execute(statement)
-        res = con.cur.fetchall()
-        con.close()
-        return res
-
-    def search_matches_by_team_id(self, team_id):
-        search_string = '\'' + team_id + '\''
+    def search_matches_by_team_id(self, team_id, event_type):
+        str_event_type = '\'' + event_type + '\''
         con = Connection()
         statement = 'select match_id, team_hometeam_id, team_awayteam_id, home_team_goal, away_team_goal, "date" from soccer02.match ' \
-            'where team_hometeam_id = '+ team_id +' or team_awayteam_id = ' + team_id + ' ' \
+            'where (team_hometeam_id = '+ team_id +' or team_awayteam_id = ' + team_id + ') ' \
 		    'and team_hometeam_id is not null and team_awayteam_id is not null and home_team_goal is not null ' \
-		    'and away_team_goal is not null'
+		    'and away_team_goal is not null ' \
+            'and match_id in (select match_match_id from soccer02.matchevent where match_match_id = match_id and event_type = '+ str_event_type +' and pos_x is not null and pos_y is not null)'
+
         con.cur.execute(statement)
         res = con.cur.fetchall()
         con.close()
@@ -156,7 +145,9 @@ class DB_Factory:
     # Get heatmap data for a match based on given match_id and event_type
     def match_heatmap(self, match_id, event_type):
         con = Connection()
-        statement = 'select pos_x, pos_y ' \
+        statement = 'select pos_x, pos_y, sub_type, ' \
+                    'team_team_id, player_player_id, ' \
+                    'player_playerfouled, player_playerasst ' \
                     'from soccer02.matchevent ' \
                     'where match_match_id = ' + match_id + '' \
                     'and event_type = \'' + event_type + '\'' \
@@ -165,15 +156,45 @@ class DB_Factory:
         res = con.cur.fetchall()
         return res
 
-    # Get heatmap data for a match based on given match_id and event_type
-    def player_heatmap(self, player_name, event_type):
+    # Get heatmap data for a match based on given player_id and event_type
+    def player_heatmap(self, player_id, event_type):
         con = Connection()
-        statement = 'select pos_x, pos_y ' \
-                    'from soccer02.player ' \
-                    'join soccer02.matchevent on soccer02.player.player_id = soccer02.matchevent.player_player_id ' \
-                    'where upper(soccer02.player.name) = \'' + player_name.upper() + '\' and event_type = \'' + event_type + '\' ' \
-                    'and pos_x is not null and pos_y is not null and player.name is not null and player_id is not null ' \
-                    'and player_player_id is not null'
+        statement = 'select pos_x, pos_y, sub_type, ' \
+                    'team_team_id, player_player_id, ' \
+                    'player_playerfouled, player_playerasst ' \
+                    'from soccer02.matchevent where player_player_id = \'' + player_id + '\' and event_type = \'' + event_type + '\' ' \
+                    'and pos_x is not null and pos_y is not null and player_player_id is not null'
+        con.cur.execute(statement)
+        res = con.cur.fetchall()
+        return res
+
+    # Get heatmap data for a match based on given team_id and event_type
+    def team_heatmap(self, team_id, event_type):
+        con = Connection()
+        statement = 'select pos_x, pos_y, sub_type, ' \
+                    'team_team_id, player_player_id, ' \
+                    'player_playerfouled, player_playerasst ' \
+                    'from soccer02.matchevent ' \
+                    'where team_team_id = ' + team_id + '' \
+                    'and event_type = \'' + event_type + '\'' \
+                    'and pos_x is not null and pos_y is not null'
+        con.cur.execute(statement)
+        res = con.cur.fetchall()
+        return res
+
+    # For the machine-learning-module.
+    def all_foulcommits(self):
+        con = Connection()
+        statement = 'select * from matchevent ' \
+                    'where event_type like \'foulcommit\' ' \
+                    'and team_team_id is not null '\
+                    'and player_player_id is not null '\
+                    'and match_match_id is not null '\
+                    'and matchevent_id is not null '\
+                    'and pos_x is not null '\
+                    'and pos_y is not null '\
+                    'and elapsed is not null '\
+                    'and rownum <= 80000'
         con.cur.execute(statement)
         res = con.cur.fetchall()
         return res

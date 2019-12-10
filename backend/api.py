@@ -49,14 +49,15 @@ def teamMatches(team_name):
     result = json.dumps(dummy)
     return result
 
-""" Returns all players with contained name.
-:param team_name: The name of the team as a string.
-:returns: Result as JSON.
+""" Returns all players with with data in the matchevent table associated with the
+given event_type.
+:param event_type: The event type ID.
+:returns: Result as an Array.
 """
-@app.route("/search/players/<player_name>")
+@app.route("/search/players/<event_type>")
 @cache.cached(timeout=5000)
-def searchPlayers(player_name):
-    dummy = db.search_player(player_name)
+def getPlayersWithEvent(event_type):
+    dummy = db.get_players_with_event(event_type)
     result = json.dumps(dummy)
     return result
 
@@ -94,18 +95,18 @@ def match(home_team, away_team, date):
     return result
 
 
-@app.route("/matches/<team_id>")
+@app.route("/matches/<team_id>/<event_type>")
 @cache.cached(timeout=5000)
-def get_matches_by_team_id(team_id):
-    dummy = db.search_matches_by_team_id(team_id)
+def get_matches_by_team_id(team_id, event_type):
+    dummy = db.search_matches_by_team_id(team_id, event_type)
     result = json.dumps(dummy, default=str)
     return result
 
 ################################################# Heatmap
-@app.route("/player/<player_name>/<event_type>")
+@app.route("/player/<player_id>/<event_type>")
 @cache.cached(timeout=5000)
-def get_heatmap_data_for_player(player_name, event_type):
-    dummy = db.player_heatmap(player_name, event_type)
+def get_heatmap_data_for_player(player_id, event_type):
+    dummy = db.player_heatmap(player_id, event_type)
     result = json.dumps(dummy, default=str)
     return result
 
@@ -113,6 +114,30 @@ def get_heatmap_data_for_player(player_name, event_type):
 @cache.cached(timeout=5000)
 def get_heatmap_data_for_match(match_id, event_type):
     dummy = db.match_heatmap(match_id, event_type)
+    result = json.dumps(dummy, default=str)
+    return result
+
+@app.route("/team/<team_id>/<event_type>")
+@cache.cached(timeout=5000)
+def get_heatmap_data_for_team(team_id, event_type):
+    dummy = db.team_heatmap(team_id, event_type)
+    result = json.dumps(dummy, default=str)
+    return result
+
+@app.route("/lists/teamsWithEvents")
+@cache.cached(timeout=5000)
+def get_teams_with_events():
+    dummy = db.list_teams_with_events()
+    result = json.dumps(dummy, default=str)
+    return result
+
+"""
+    Get player by ID
+"""
+@app.route("/player/<player_id>")
+@cache.cached(timeout=5000)
+def get_player_by_id(player_id):
+    dummy = db.get_player_by_id(player_id)
     result = json.dumps(dummy, default=str)
     return result
 

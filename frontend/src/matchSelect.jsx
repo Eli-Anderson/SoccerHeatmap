@@ -19,12 +19,12 @@ const useStyles = makeStyles({
     }
 });
 
-export const MatchSelect = ({ data, teams, ...props }) => {
+export const MatchSelect = ({ data, teams, allTeams, ...props }) => {
     const classes = useStyles(props);
 
     const matches = data.map(match => {
-        const team1 = teams.find(t => t[3] === match[1]);
-        const team2 = teams.find(t => t[3] === match[2]);
+        const team1 = allTeams.find(t => t[3] === match[1]);
+        const team2 = allTeams.find(t => t[3] === match[2]);
         return {
             id: match[0],
             home: team1[1],
