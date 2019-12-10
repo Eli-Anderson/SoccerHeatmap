@@ -13,13 +13,12 @@ import {
 import ArrowForward from "@material-ui/icons/ArrowForward";
 import ArrowBack from "@material-ui/icons/ArrowBack";
 
-export const Heatmap = ({ data, loading, allTeams, ...props }) => {
+export const Heatmap = ({ data, loading, allTeams, allPlayers, ...props }) => {
     const containerRef = useRef();
 
     const [max, setMax] = useState(2);
     const [clickedEvents, setClickedEvents] = useState([]);
     const [clickedIndex, setClickedIndex] = useState(0);
-    const [loadingClickedEvents, setLoadingClickedEvents] = useState(false);
     const [popoverOpen, setPopoverOpen] = useState(false);
 
     // data stores the filtered data: the data we want to visualize
@@ -74,31 +73,32 @@ export const Heatmap = ({ data, loading, allTeams, ...props }) => {
                             realY: ev.clientY
                         }));
                     if (events.length) {
-                        setLoadingClickedEvents(true);
-                        console.log(events);
-                        Promise.all(
-                            events.map(d =>
-                                fetch(
-                                    `http://localhost:3001/player/${d.playerID}`
-                                ).then(x => x.json())
-                            )
-                        )
-                            .then(responses => {
-                                return events.map((d, i) => ({
-                                    ...d,
-                                    playerName: responses[i][0][2]
-                                }));
+                        setClickedEvents(
+                            events.map(ev => {
+                                const player = allPlayers.find(
+                                    x => x.id === ev.playerID
+                                );
+                                const fouled = allPlayers.find(
+                                    x => x.id === ev.playerFouled
+                                );
+                                const assist = allPlayers.find(
+                                    x => x.id === ev.playerAssist
+                                );
+                                return {
+                                    ...ev,
+                                    playerName: player ? player.name : null,
+                                    playerFouled: fouled ? fouled.name : null,
+                                    playerAssist: assist ? assist.name : null
+                                };
                             })
-                            .then(d => {
-                                setClickedEvents(d);
-                                setLoadingClickedEvents(false);
-                                setPopoverOpen(true);
-                            });
+                        );
+                        setClickedIndex(0);
+                        setPopoverOpen(true);
                     }
                 }
             };
         }
-    }, [data]);
+    }, [data, allPlayers]);
 
     useEffect(() => {
         const container = containerRef.current;
@@ -155,13 +155,6 @@ export const Heatmap = ({ data, loading, allTeams, ...props }) => {
                         src="field.svg"
                         alt=""
                     />
-                    {loadingClickedEvents && (
-                        <Box position="absolute" top="50%" left="50%">
-                            <Box margin="8px">
-                                <CircularProgress />
-                            </Box>
-                        </Box>
-                    )}
                     {clickedEvents.length > 0 && (
                         <Popover
                             open={popoverOpen}
@@ -212,14 +205,9 @@ export const Heatmap = ({ data, loading, allTeams, ...props }) => {
                                     </IconButton>
                                 </Box>
                                 <Typography>
-                                    {"Comment: " +
-                                        (clickedEvents[clickedIndex].comment ||
-                                            "None")}
-                                </Typography>
-                                <Typography>
                                     {"Type: " +
                                         (clickedEvents[clickedIndex].subType ||
-                                            "None")}
+                                            "N/A")}
                                 </Typography>
                                 <Typography>
                                     {"Team: " +
@@ -236,19 +224,14 @@ export const Heatmap = ({ data, loading, allTeams, ...props }) => {
                                             .playerName || "Unknown")}
                                 </Typography>
                                 <Typography>
-                                    {"Venue: " +
-                                        (clickedEvents[clickedIndex].venue ||
-                                            "Unknown")}
-                                </Typography>
-                                <Typography>
-                                    {"Injury Time: " +
+                                    {"Fouled: " +
                                         (clickedEvents[clickedIndex]
-                                            .injuryTime || "N/A")}
+                                            .playerFouled || "N/A")}
                                 </Typography>
                                 <Typography>
-                                    {"Goal Type: " +
-                                        (clickedEvents[clickedIndex].goalType ||
-                                            "N/A")}
+                                    {"Assist: " +
+                                        (clickedEvents[clickedIndex]
+                                            .playerAssist || "N/A")}
                                 </Typography>
                             </Box>
                         </Popover>

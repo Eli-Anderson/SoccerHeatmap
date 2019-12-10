@@ -48,6 +48,7 @@ function App(props) {
     const [eventTypes, setEventTypes] = useState([]);
     const [teams, setTeams] = useState([]);
     const [allTeams, setAllTeams] = useState([]);
+    const [allPlayers, setAllPlayers] = useState([]);
     const [matches, setMatches] = useState([]);
 
     const [searchType, setSearchType] = useState("player");
@@ -57,6 +58,11 @@ function App(props) {
             .then(response => response.json())
             .then(d => d.sort((a, b) => (a[1] < b[1] ? -1 : 1))) // sort alphabetically by name
             .then(setAllTeams)
+            .catch(error => console.error(error));
+        fetch("http://localhost:3001/lists/allPlayers")
+            .then(response => response.json())
+            .then(json => json.map(p => ({ id: p[0], name: p[1] })))
+            .then(setAllPlayers)
             .catch(error => console.error(error));
         fetch("http://localhost:3001/lists/teamsWithEvents")
             .then(response => response.json())
@@ -108,24 +114,20 @@ function App(props) {
                         ([
                             y,
                             x,
-                            comment,
                             subType,
                             teamID,
                             playerID,
-                            venue,
-                            injuryTime,
-                            goalType
+                            playerFouled,
+                            playerAssist
                         ]) => ({
                             x,
                             y,
                             value: 1,
-                            comment,
                             subType,
                             teamID,
                             playerID,
-                            venue,
-                            injuryTime,
-                            goalType
+                            playerFouled,
+                            playerAssist
                         })
                     );
                 })
@@ -157,24 +159,20 @@ function App(props) {
                         ([
                             y,
                             x,
-                            comment,
                             subType,
                             teamID,
                             playerID,
-                            venue,
-                            injuryTime,
-                            goalType
+                            playerFouled,
+                            playerAssist
                         ]) => ({
                             x,
                             y,
                             value: 1,
-                            comment,
                             subType,
                             teamID,
                             playerID,
-                            venue,
-                            injuryTime,
-                            goalType
+                            playerFouled,
+                            playerAssist
                         })
                     )
                 )
@@ -195,24 +193,20 @@ function App(props) {
                         ([
                             y,
                             x,
-                            comment,
                             subType,
                             teamID,
                             playerID,
-                            venue,
-                            injuryTime,
-                            goalType
+                            playerFouled,
+                            playerAssist
                         ]) => ({
                             x,
                             y,
                             value: 1,
-                            comment,
                             subType,
                             teamID,
                             playerID,
-                            venue,
-                            injuryTime,
-                            goalType
+                            playerFouled,
+                            playerAssist
                         })
                     )
                 )
@@ -330,6 +324,7 @@ function App(props) {
                         data={data}
                         loading={loading}
                         allTeams={allTeams}
+                        allPlayers={allPlayers}
                     />
                     <DataInfo data={data} />
                 </Box>
