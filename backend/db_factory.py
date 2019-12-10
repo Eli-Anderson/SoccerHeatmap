@@ -151,9 +151,9 @@ class DB_Factory:
 
     # For the machine-learning-module. 
     def foulcommits_testing_data(self):
-        statement = 'select elapsed, elapsed_plus, pos_x, pos_y, ' \
-                    'event_type, sub_type, team_team_id, ' \
-                    'player_player_id, match_match_id, card_type, venue, ' \
+        statement = 'select card_type, elapsed, elapsed_plus, pos_x, pos_y, ' \
+                    'team_team_id, ' \
+                    'player_player_id, match_match_id, venue, ' \
                     'player_playerfouled, matchevent_id, ' \
                     'matchevent_ext_id from matchevent ' \
                     'where event_type like \'foulcommit\' ' \
