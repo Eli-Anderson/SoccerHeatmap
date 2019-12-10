@@ -1,7 +1,0 @@
-This is a test file.
-
-All "@" should be replaced with nothing!
-
-Lets see if it works.
-
-Th@is has not worked i@f the@re are st@ill a@t  sig@ns in th@e s@e@n@tence.
