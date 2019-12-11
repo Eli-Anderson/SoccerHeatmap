@@ -1,6 +1,5 @@
 *.conf
 /backend/__pycache__
 /backend/.vscode
-**/.vscode
 *.json
 /.vscode
