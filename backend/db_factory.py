@@ -197,4 +197,63 @@ class DB_Factory:
                     'and rownum <= 80000'
         con.cur.execute(statement)
         res = con.cur.fetchall()
+
+    def close(self):
+        self.connection.close()
+
+    # For the machine-learning-module. 
+    """def foulcommits_training_data(self):
+        statement = 'select a.elapsed, a.elapsed_plus, a.pos_x, a.pos_y, ' \
+                    'a.team_team_id, a.player_player_id, a.match_match_id, a.venue, ' \
+                    'a.player_playerfouled, a.matchevent_id, ' \
+                    'a.matchevent_ext_id ' \
+                    'from matchevent a, matchevent b ' \
+                    'where a.player_player_id = a.player_player_id ' \
+                    'and a.pos_x is not null ' \
+                    'and a. pos_y is not null ' \
+                    'and b.card_type is not null ' \
+                    'and rownum <= 80000' 
+        self.connection.cursor.execute(statement)
+        res = self.connection.cursor.fetchall()
+        return res
+
+    def foulcommits_training_data_card(self):
+        statement = 'select b.card_type ' \
+                    'from matchevent a, matchevent b ' \
+                    'where a.player_player_id = a.player_player_id ' \
+                    'and a.pos_x is not null ' \
+                    'and a. pos_y is not null ' \
+                    'and b.card_type is not null ' \
+                    'and rownum <= 80000' 
+        self.connection.cursor.execute(statement)
+        res = self.connection.cursor.fetchall()
+        return res
+        """
+
+    # For the machine-learning-module. 
+    def foulcommits_data(self):
+        statement = 'select a.elapsed, a.elapsed_plus, a.pos_x, a.pos_y, ' \
+                    'a.team_team_id, a.player_player_id, a.match_match_id, a.venue, ' \
+                    'a.player_playerfouled, a.matchevent_id, ' \
+                    'a.matchevent_ext_id ' \
+                    'from matchevent a, matchevent b ' \
+                    'where a.player_player_id = a.player_player_id ' \
+                    'and a.pos_x is not null ' \
+                    'and a. pos_y is not null ' \
+                    'and b.card_type is not null ' \
+                    'and rownum <= 100000' 
+        self.connection.cursor.execute(statement)
+        res = self.connection.cursor.fetchall()
+        return res
+
+    def foulcommits_data_card(self):
+        statement = 'select b.card_type ' \
+                    'from matchevent a, matchevent b ' \
+                    'where a.player_player_id = a.player_player_id ' \
+                    'and a.pos_x is not null ' \
+                    'and a. pos_y is not null ' \
+                    'and b.card_type is not null ' \
+                    'and rownum <= 100000' 
+        self.connection.cursor.execute(statement)
+        res = self.connection.cursor.fetchall()
         return res
