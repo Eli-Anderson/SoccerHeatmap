@@ -139,6 +139,7 @@ def get_teams_with_events():
 def get_player_by_id(player_id):
     dummy = db.get_player_by_id(player_id)
     result = json.dumps(dummy, default=str)
+    return result
 
 @app.route("/ml")
 def player_heatmap_fouls(player_name):
