@@ -57,6 +57,7 @@ export const Heatmap = ({ data, loading, allTeams, allPlayers, ...props }) => {
 
             // open event info on click
             canvas.onclick = ev => {
+                setClickedIndex(0);
                 const container = containerRef.current;
                 const scale = {
                     x: container.clientWidth / 69,
@@ -92,7 +93,6 @@ export const Heatmap = ({ data, loading, allTeams, allPlayers, ...props }) => {
                                 };
                             })
                         );
-                        setClickedIndex(0);
                         setPopoverOpen(true);
                     }
                 }
@@ -155,87 +155,88 @@ export const Heatmap = ({ data, loading, allTeams, allPlayers, ...props }) => {
                         src="field.svg"
                         alt=""
                     />
-                    {clickedEvents.length > 0 && (
-                        <Popover
-                            open={popoverOpen}
-                            anchorReference="anchorPosition"
-                            anchorPosition={{
-                                left: clickedEvents[0].realX,
-                                top: clickedEvents[0].realY
-                            }}
-                            onClose={() => {
-                                setPopoverOpen(false);
-                            }}
-                        >
-                            <Box margin="8px" minWidth="164px">
-                                <Box
-                                    display="flex"
-                                    justifyContent="space-between"
-                                    alignItems="center"
-                                    borderBottom="1px solid gainsboro"
-                                    marginBottom="12px"
-                                >
-                                    <IconButton
-                                        onClick={() => {
-                                            if (clickedIndex > 0) {
-                                                setClickedIndex(
-                                                    clickedIndex - 1
-                                                );
-                                            }
-                                        }}
+                    {clickedEvents.length > 0 &&
+                        clickedIndex < clickedEvents.length && (
+                            <Popover
+                                open={popoverOpen}
+                                anchorReference="anchorPosition"
+                                anchorPosition={{
+                                    left: clickedEvents[0].realX,
+                                    top: clickedEvents[0].realY
+                                }}
+                                onClose={() => {
+                                    setPopoverOpen(false);
+                                }}
+                            >
+                                <Box margin="8px" minWidth="164px">
+                                    <Box
+                                        display="flex"
+                                        justifyContent="space-between"
+                                        alignItems="center"
+                                        borderBottom="1px solid gainsboro"
+                                        marginBottom="12px"
                                     >
-                                        <ArrowBack />
-                                    </IconButton>
-                                    <Typography>{`${clickedIndex + 1} of ${
-                                        clickedEvents.length
-                                    }`}</Typography>
-                                    <IconButton
-                                        onClick={() => {
-                                            if (
-                                                clickedIndex <
-                                                clickedEvents.length - 1
-                                            ) {
-                                                setClickedIndex(
-                                                    clickedIndex + 1
-                                                );
-                                            }
-                                        }}
-                                    >
-                                        <ArrowForward />
-                                    </IconButton>
+                                        <IconButton
+                                            onClick={() => {
+                                                if (clickedIndex > 0) {
+                                                    setClickedIndex(
+                                                        clickedIndex - 1
+                                                    );
+                                                }
+                                            }}
+                                        >
+                                            <ArrowBack />
+                                        </IconButton>
+                                        <Typography>{`${clickedIndex + 1} of ${
+                                            clickedEvents.length
+                                        }`}</Typography>
+                                        <IconButton
+                                            onClick={() => {
+                                                if (
+                                                    clickedIndex <
+                                                    clickedEvents.length - 1
+                                                ) {
+                                                    setClickedIndex(
+                                                        clickedIndex + 1
+                                                    );
+                                                }
+                                            }}
+                                        >
+                                            <ArrowForward />
+                                        </IconButton>
+                                    </Box>
+                                    <Typography>
+                                        {"Type: " +
+                                            (clickedEvents[clickedIndex]
+                                                .subType || "N/A")}
+                                    </Typography>
+                                    <Typography>
+                                        {"Team: " +
+                                            (allTeams.find(
+                                                x =>
+                                                    x[3] ===
+                                                    clickedEvents[clickedIndex]
+                                                        .teamID
+                                            )[1] || "Unknown")}
+                                    </Typography>
+                                    <Typography>
+                                        {"Player: " +
+                                            (clickedEvents[clickedIndex]
+                                                .playerName || "Unknown")}
+                                    </Typography>
+                                    <Typography>
+                                        {"Fouled: " +
+                                            (clickedEvents[clickedIndex]
+                                                .playerFouled || "N/A")}
+                                    </Typography>
+                                    <Typography>
+                                        {"Assist: " +
+                                            (clickedEvents[clickedIndex]
+                                                .playerAssist || "N/A")}
+                                    </Typography>
                                 </Box>
-                                <Typography>
-                                    {"Type: " +
-                                        (clickedEvents[clickedIndex].subType ||
-                                            "N/A")}
-                                </Typography>
-                                <Typography>
-                                    {"Team: " +
-                                        (allTeams.find(
-                                            x =>
-                                                x[3] ===
-                                                clickedEvents[clickedIndex]
-                                                    .teamID
-                                        )[1] || "Unknown")}
-                                </Typography>
-                                <Typography>
-                                    {"Player: " +
-                                        (clickedEvents[clickedIndex]
-                                            .playerName || "Unknown")}
-                                </Typography>
-                                <Typography>
-                                    {"Fouled: " +
-                                        (clickedEvents[clickedIndex]
-                                            .playerFouled || "N/A")}
-                                </Typography>
-                                <Typography>
-                                    {"Assist: " +
-                                        (clickedEvents[clickedIndex]
-                                            .playerAssist || "N/A")}
-                                </Typography>
-                            </Box>
-                        </Popover>
-                    )}
+                            </Popover>
+                        )}
                 </div>
             </div>
         </div>
