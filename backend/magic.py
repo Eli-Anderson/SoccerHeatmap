@@ -3,33 +3,38 @@ from keras.models import Sequential
 from keras.layers import Dense
 from keras.utils import np_utils
 
-from keras.datasets import mnist
 
-#XTrain = open('','r')
-#yTrain = open('','r')
-#XTest = open('','r')
-#yTest = open('','r')
+XTrain = open('./backend/training_formattet.txt','r')
+yTrain = open('./backend/training_label.txt','r')
+XTest = open('./backend/test_formattet_feature.txt','r')
+yTest = open('./backend/test_label.txt','r')
 
-(XTrain, yTrain), (XTest, yTest) = mnist.load_data()
+XTrain = np.array(XTrain)
+yTrain = np.array(yTrain)
+XTest = np.array(XTest)
+yTest = np.array(yTest)
 
-XTrain = XTrain.reshape(60000, 784)
-XTest = XTest.reshape(10000, 784)
-XTrain = XTrain/255
-XTest = XTest/255
+np.reshape(XTrain, (81159, 11))
+np.reshape(yTrain, (24951, 11))
 
-lines_of_input = 784
-output_vector = 10
 
 #no Scaling due to the big differenze between low and high values
+#XTrain = XTrain/MAX_VALUE
+#XTest = XTest/MAX_VALUE
+
+lines_of_input = 11
+output_vector = 4
+
+
 YTrain = np_utils.to_categorical(yTrain, output_vector)
 YTest = np_utils.to_categorical(yTest, output_vector)
 
 magic = Sequential()
-magic.add(Dense(80, input_dim=lines_of_input, activation='relu'))
-magic.add(Dense(40,activation='relu'))
-magic.add(Dense(10, activation='sigmoid'))
+magic.add(Dense(8, input_dim=lines_of_input, activation='relu'))
+magic.add(Dense(4,activation='relu'))
+magic.add(Dense(5, activation='sigmoid'))
 magic.compile(loss='mean_squared_error', optimizer='adam', metrics=['accuracy'])
-magic.fit(XTrain, YTrain, epochs=15, verbose=True)
+magic.fit(XTrain, YTrain, epochs=10, verbose=True)
 
 yP = magic.predict(XTest)
 error = np.flatnonzero(np.argmax(yP, axis=1)-yTest)
