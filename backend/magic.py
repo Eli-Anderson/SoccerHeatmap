@@ -4,19 +4,22 @@ from keras.layers import Dense
 from keras.utils import np_utils
 
 
+"""
 XTrain = open('./backend/arr_training_formatted.npy','r')
 yTrain = open('./backend/arr_training_label.npy','r')
 XTest = open('./backend/arr_test_formatted.npy','r')
 yTest = open('./backend/arr_test_label.npy','r')
+"""
 
-XTrain = np.array(XTrain)
-yTrain = np.array(yTrain)
-XTest = np.array(XTest)
-yTest = np.array(yTest)
+XTrain = np.genfromtxt(fname = "./backend/training_formattet.txt", dtype='float')
+yTrain = np.genfromtxt(fname = "./backend/training_label.txt", dtype='float')
+XTest = np.genfromtxt(fname = "./backend/test_formattet_feature.txt", dtype='float')
+yTest = np.genfromtxt(fname = "./backend/test_label.txt", dtype='float')
 
-np.reshape(XTrain, (81159, 11))
-np.reshape(yTrain, (24951, 11))
+XTrain = XTrain.reshape(81159, 11)
+XTest = XTest.reshape(24951, 11)
 
+#MAX_VALUE = 34567
 
 #no Scaling due to the big differenze between low and high values
 #XTrain = XTrain/MAX_VALUE
@@ -30,9 +33,9 @@ YTrain = np_utils.to_categorical(yTrain, output_vector)
 YTest = np_utils.to_categorical(yTest, output_vector)
 
 magic = Sequential()
-magic.add(Dense(8, input_dim=lines_of_input, activation='relu'))
-magic.add(Dense(4,activation='relu'))
-magic.add(Dense(5, activation='sigmoid'))
+magic.add(Dense(11, input_dim=lines_of_input, activation='relu'))
+magic.add(Dense(10,activation='relu'))
+magic.add(Dense(4, activation='sigmoid'))
 magic.compile(loss='mean_squared_error', optimizer='adam', metrics=['accuracy'])
 magic.fit(XTrain, YTrain, epochs=10, verbose=True)
 
