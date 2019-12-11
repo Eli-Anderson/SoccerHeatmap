@@ -1,2 +1,7 @@
 *.conf
+<<<<<<< HEAD
 backend/__pycache__/*
+=======
+/.vscode
+*.json
+>>>>>>> origin/backend
