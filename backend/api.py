@@ -132,7 +132,6 @@ def get_teams_with_events():
     return result
 
 """
-<<<<<<< HEAD
     Get player by ID
 """
 @app.route("/player/<player_id>")
@@ -140,12 +139,12 @@ def get_teams_with_events():
 def get_player_by_id(player_id):
     dummy = db.get_player_by_id(player_id)
     result = json.dumps(dummy, default=str)
-=======
+    return result
+
 @app.route("/ml")
 def player_heatmap_fouls(player_name):
     dummy = db.player_heatmap(player_name)
     result = json.dumps(dummy)
->>>>>>> origin/backend
     return result
 
 """

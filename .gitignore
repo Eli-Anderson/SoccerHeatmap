@@ -1,7 +1,5 @@
 *.conf
-<<<<<<< HEAD
-backend/__pycache__/*
-=======
-/.vscode
+/backend/__pycache__
+/backend/.vscode
 *.json
->>>>>>> origin/backend
+/.vscode
