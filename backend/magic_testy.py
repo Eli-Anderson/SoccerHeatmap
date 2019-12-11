@@ -37,6 +37,6 @@ print("############ yTest END ############")
 ### Writing arrays in files
 
 np.save('./backend/arr_test_formatted', xTest)
-np.save('./backend/arr_label', yTest)
+np.save('./backend/arr_test_label', yTest)
 np.save('./backend/arr_training_formatted', xTrain)
 np.save('./backend/arr_training_label', yTrain)
