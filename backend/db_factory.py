@@ -132,38 +132,58 @@ class DB_Factory:
 
     # For the machine-learning-module. 
     def foulcommits_training_data(self):
-        statement = 'select elapsed, elapsed_plus, pos_x, pos_y, ' \
-                    'team_team_id, ' \
-                    'player_player_id, match_match_id, venue, ' \
-                    'player_playerfouled, matchevent_id, ' \
-                    'matchevent_ext_id from matchevent ' \
-                    'where event_type like \'foulcommit\' ' \
-                    'and team_team_id is not null ' \
-                    'and player_player_id is not null ' \
-                    'and pos_x is not null ' \
-                    'and pos_y is not null ' \
-                    'and elapsed is not null ' \
-                    'and matchevent_id <=2260000' \
-                    'order by matchevent_id desc'
+        statement = 'select a.elapsed, a.elapsed_plus, a.pos_x, a.pos_y, ' \
+                    'a.team_team_id, a.player_player_id, a.match_match_id, a.venue, ' \
+                    'a.player_playerfouled, a.matchevent_id, ' \
+                    'a.matchevent_ext_id ' \
+                    'from matchevent a, matchevent b ' \
+                    'where a.player_player_id = a.player_player_id ' \
+                    'and a.pos_x is not null ' \
+                    'and a. pos_y is not null ' \
+                    'and b.card_type is not null ' \
+                    'and rownum <= 80000;' 
+        self.connection.cursor.execute(statement)
+        res = self.connection.cursor.fetchall()
+        return res
+
+    def foulcommits_training_data_card(self):
+        statement = 'select b.card_type ' \
+                    'from matchevent a, matchevent b ' \
+                    'where a.player_player_id = a.player_player_id ' \
+                    'and a.pos_x is not null ' \
+                    'and a. pos_y is not null ' \
+                    'and b.card_type is not null ' \
+                    'and rownum <= 80000 ;' 
         self.connection.cursor.execute(statement)
         res = self.connection.cursor.fetchall()
         return res
 
     # For the machine-learning-module. 
     def foulcommits_testing_data(self):
-        statement = 'select elapsed, elapsed_plus, pos_x, pos_y, ' \
-                    'team_team_id, ' \
-                    'player_player_id, match_match_id, venue, ' \
-                    'player_playerfouled, matchevent_id, ' \
-                    'matchevent_ext_id from matchevent ' \
-                    'where event_type like \'foulcommit\' ' \
-                    'and team_team_id is not null ' \
-                    'and player_player_id is not null ' \
-                    'and pos_x is not null ' \
-                    'and pos_y is not null ' \
-                    'and elapsed is not null ' \
-                    'and matchevent_id > 2260000' \
-                    'order by matchevent_id desc'
+        statement = 'select a.elapsed, a.elapsed_plus, a.pos_x, a.pos_y, ' \
+                    'a.team_team_id, a.player_player_id, a.match_match_id, a.venue, ' \
+                    'a.player_playerfouled, a.matchevent_id, ' \
+                    'a.matchevent_ext_id ' \
+                    'from matchevent a, matchevent b ' \
+                    'where a.player_player_id = a.player_player_id ' \
+                    'and a.pos_x is not null ' \
+                    'and a. pos_y is not null ' \
+                    'and b.card_type is not null ' \
+                    'and rownum > 80000 ' \
+                    'and rownum <= 100000;' 
+        self.connection.cursor.execute(statement)
+        res = self.connection.cursor.fetchall()
+        return res
+
+    def foulcommits_testing_data_card(self):
+        statement = 'select b.card_type ' \
+                    'from matchevent a, matchevent b ' \
+                    'where a.player_player_id = a.player_player_id ' \
+                    'and a.pos_x is not null ' \
+                    'and a. pos_y is not null ' \
+                    'and b.card_type is not null ' \
+                    'and rownum > 80000 ' \
+                    'and rownum <= 100000;' 
         self.connection.cursor.execute(statement)
         res = self.connection.cursor.fetchall()
         return res
