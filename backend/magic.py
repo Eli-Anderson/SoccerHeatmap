@@ -4,10 +4,10 @@ from keras.layers import Dense
 from keras.utils import np_utils
 
 
-XTrain = open('./backend/training_formattet.txt','r')
-yTrain = open('./backend/training_label.txt','r')
-XTest = open('./backend/test_formattet_feature.txt','r')
-yTest = open('./backend/test_label.txt','r')
+XTrain = open('./backend/arr_training_formatted.npy','r')
+yTrain = open('./backend/arr_training_label.npy','r')
+XTest = open('./backend/arr_test_formatted.npy','r')
+yTest = open('./backend/arr_test_label.npy','r')
 
 XTrain = np.array(XTrain)
 yTrain = np.array(yTrain)
